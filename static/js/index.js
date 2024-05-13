@@ -1,9 +1,5 @@
 document.addEventListener("DOMContentLoaded", function() {
     animateText();
-});
-
-
-document.addEventListener("DOMContentLoaded", function() {
     displayLocalDate();
 });
 
@@ -33,59 +29,60 @@ function displayLocalDate() {
     dateElement.textContent = formattedDate;
 }
 
-document.addEventListener("DOMContentLoaded", function() {
-    const checklistContainer = document.querySelector(".checklist-container");
 
-    document.addEventListener("keyup", function(event) {
-        const userLabelInput = event.target.closest(".user-label-input");
-        if (!userLabelInput) return;
-
-        if (event.key === "Enter") createNewCheckbox();
-        else if ((event.key === "Delete" || event.key === "Backspace") && userLabelInput.value === "") deleteCurrentCheckbox(userLabelInput);
-    });
-
-    function createNewCheckbox() {
-        const newCheckboxWrapper = document.createElement("div");
-        newCheckboxWrapper.classList.add("checkbox-wrapper");
-
-        const newCheckbox = document.createElement("input");
-        newCheckbox.setAttribute("type", "checkbox");
-        newCheckbox.classList.add("inp-cbx");
-        newCheckbox.setAttribute("id", `cbx-${document.querySelectorAll(".checkbox-wrapper").length + 1}`);
-
-        const newLabel = document.createElement("label");
-        newLabel.setAttribute("for", `cbx-${document.querySelectorAll(".checkbox-wrapper").length + 1}`);
-        newLabel.classList.add("cbx");
-
-        const newLabelSpan1 = document.createElement("span");
-        newLabelSpan1.innerHTML = `<svg viewBox="0 0 12 10" height="10px" width="12px"><polyline points="1.5 6 4.5 9 10.5 1"></polyline></svg>`;
-
-        const newLabelSpan2 = document.createElement("span");
-        const newInput = document.createElement("input");
-        newInput.setAttribute("type", "text");
-        newInput.setAttribute("class", "user-label-input");
-        newInput.setAttribute("placeholder", " ");
-        newLabelSpan2.appendChild(newInput);
-
-        newLabel.appendChild(newLabelSpan1);
-        newLabel.appendChild(newLabelSpan2);
-
-        newCheckboxWrapper.appendChild(newCheckbox);
-        newCheckboxWrapper.appendChild(newLabel);
-
-        checklistContainer.appendChild(newCheckboxWrapper);
-
-        newInput.focus();
-
-        newCheckbox.addEventListener("change", function() {
-            console.log(this.checked ? "Checkbox checked" : "Checkbox unchecked");
-        });
-    }
-
-    function deleteCurrentCheckbox(userLabelInput) {
-        const currentCheckboxWrapper = userLabelInput.closest('.checkbox-wrapper');
-        const originalCheckboxWrapper = document.querySelector('.checkbox-wrapper');
-
-        if (currentCheckboxWrapper && currentCheckboxWrapper !== originalCheckboxWrapper) currentCheckboxWrapper.remove();
+document.addEventListener('keydown', function (event) {
+    if (event.key === 'Enter') {
+        event.preventDefault();
+        createCheckbox();
+    } else if (event.key === 'Delete' || event.key === 'Backspace') {
+        event.preventDefault();
+        deleteCheckbox();
     }
 });
+
+
+function createCheckbox() {
+    const checklistContainer = document.querySelector('.checklist-container');
+    const focusedCheckbox = document.activeElement.closest('.checkbox-wrapper');
+    const newCheckboxWrapper = document.createElement('div');
+
+    newCheckboxWrapper.classList.add('checkbox-wrapper');
+
+    newCheckboxWrapper.innerHTML = `
+        <input type="checkbox" id="cbx-${Date.now()}" class="inp-cbx" />
+        <label for="cbx-${Date.now()}" class="cbx">
+            <span><svg viewBox="0 0 12 10" height="10px" width="12px"><polyline points="1.5 6 4.5 9 10.5 1"></polyline></svg></span>
+            <input type="text" class="user-label-input" value="" placeholder="activity" />
+        </label>
+    `;
+
+    if (focusedCheckbox) {
+        checklistContainer.insertBefore(newCheckboxWrapper, focusedCheckbox.nextSibling);
+    } else {
+        checklistContainer.appendChild(newCheckboxWrapper);
+    }
+
+    const newLabelInput = newCheckboxWrapper.querySelector('.user-label-input');
+    newLabelInput.focus();
+}
+
+
+function deleteCheckbox() {
+    const focusedCheckbox = document.activeElement.closest('.checkbox-wrapper');
+
+    if (focusedCheckbox && !focusedCheckbox.isSameNode(document.querySelector('.checkbox-wrapper'))) {
+        const previousCheckbox = focusedCheckbox.previousElementSibling;
+        focusedCheckbox.remove();
+
+        if (previousCheckbox) {
+            const inputLabel = previousCheckbox.querySelector('.user-label-input');
+            inputLabel.focus();
+        }
+    }
+}
+
+
+
+
+
+
