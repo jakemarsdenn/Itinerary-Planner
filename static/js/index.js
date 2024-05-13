@@ -1,6 +1,12 @@
-document.addEventListener("DOMContentLoaded", function() {
+window.addEventListener("DOMContentLoaded", function() {
     animateText();
     displayLocalDate();
+    loadChecklist();
+});
+
+
+window.addEventListener("beforeunload", function() {
+    saveChecklist();
 });
 
 
@@ -41,18 +47,17 @@ document.addEventListener('keydown', function (event) {
 });
 
 
-function createCheckbox() {
+function createCheckbox(checked = false, label = '') {
     const checklistContainer = document.querySelector('.checklist-container');
-    const focusedCheckbox = document.activeElement.closest('.checkbox-wrapper');
     const newCheckboxWrapper = document.createElement('div');
+    const focusedCheckbox = document.activeElement.closest('.checkbox-wrapper');
 
     newCheckboxWrapper.classList.add('checkbox-wrapper');
-
     newCheckboxWrapper.innerHTML = `
-        <input type="checkbox" id="cbx-${Date.now()}" class="inp-cbx" />
+        <input type="checkbox" id="cbx-${Date.now()}" class="inp-cbx" ${checked ? 'checked' : ''} />
         <label for="cbx-${Date.now()}" class="cbx">
             <span><svg viewBox="0 0 12 10" height="10px" width="12px"><polyline points="1.5 6 4.5 9 10.5 1"></polyline></svg></span>
-            <input type="text" class="user-label-input" value="" placeholder="activity" />
+            <input type="text" class="user-label-input" value="${label}" placeholder="activity" />
         </label>
     `;
 
@@ -61,6 +66,8 @@ function createCheckbox() {
     } else {
         checklistContainer.appendChild(newCheckboxWrapper);
     }
+
+    checklistContainer.appendChild(newCheckboxWrapper);
 
     const newLabelInput = newCheckboxWrapper.querySelector('.user-label-input');
     newLabelInput.focus();
@@ -95,6 +102,47 @@ function deleteCheckbox() {
 }
 
 
+class ChecklistMemento {
+    constructor(checklistState) {
+        this.checklistState = checklistState;
+    }
+}
+
+
+function saveChecklist() {
+    const checklistState = [];
+    const checkboxes = document.querySelectorAll('.checkbox-wrapper');
+
+    checkboxes.forEach(checkbox => {
+        const checkboxInput = checkbox.querySelector('.inp-cbx');
+        const checkboxLabel = checkbox.querySelector('.user-label-input');
+
+        checklistState.push({
+            checked: checkboxInput.checked,
+            label: checkboxLabel.value
+        });
+    });
+
+    const checklistMemento = new ChecklistMemento(checklistState);
+    localStorage.setItem('checklistMemento', JSON.stringify(checklistMemento));
+}
+
+
+function loadChecklist() {
+    const checklistMementoJson = localStorage.getItem('checklistMemento');
+
+    if (checklistMementoJson) {
+        const checklistMemento = JSON.parse(checklistMementoJson);
+        const checklistState = checklistMemento.checklistState;
+
+        const checklistContainer = document.querySelector('.checklist-container');
+        checklistContainer.innerHTML = '';
+
+        checklistState.forEach(item => {
+            createCheckbox(item.checked, item.label);
+        });
+    }
+}
 
 
 
