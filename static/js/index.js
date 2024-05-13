@@ -67,11 +67,11 @@ function createCheckbox(checked = false, label = '') {
         checklistContainer.appendChild(newCheckboxWrapper);
     }
 
-    checklistContainer.appendChild(newCheckboxWrapper);
-
     const newLabelInput = newCheckboxWrapper.querySelector('.user-label-input');
     newLabelInput.focus();
+    newLabelInput.setSelectionRange(newLabelInput.value.length, newLabelInput.value.length);
 }
+
 
 
 function deleteCheckbox() {
@@ -143,9 +143,3 @@ function loadChecklist() {
         });
     }
 }
-
-
-
-
-
-
