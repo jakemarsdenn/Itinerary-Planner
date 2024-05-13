@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <link rel="icon" type="image/x-icon" href="../static/media/favicon.ico">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../static/css/main.css">
+    <title>{% block title %}{% endblock %}</title>
+    <!-- Header  -->
+    <div class="header">
+        <!-- Home Button  -->
+        <form action="/" method="post">
+            <button id="home-button">
+                <img src="../static/media/home-button.png" alt="" width="68" height="25">
+            </button>
+        </form>
+        <!-- Links  -->
+        <div class="links">
+            <form action="/about" method="post">
+                <button id="header-button">About</button>
+            </form>
+        </div>
+    </div>
+</head>
+<body>
+    {% block content %}{% endblock %}
+</body>
+</html>
