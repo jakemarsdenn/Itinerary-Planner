@@ -20,16 +20,6 @@ body {
 h1 {
   color: black;
   font-family: var(--blocky);
-  font-weight: 600;
-  font-style: normal;
-  font-size: 60px;
-  margin-top: 20px;
-  margin-bottom: 25px;
-}
-
-h2 {
-  color: black;
-  font-family: var(--blocky);
   font-size: 40px;
 }
 
