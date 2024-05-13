@@ -70,16 +70,31 @@ function createCheckbox() {
 function deleteCheckbox() {
     const focusedCheckbox = document.activeElement.closest('.checkbox-wrapper');
 
-    if (focusedCheckbox && !focusedCheckbox.isSameNode(document.querySelector('.checkbox-wrapper'))) {
-        const previousCheckbox = focusedCheckbox.previousElementSibling;
-        focusedCheckbox.remove();
+    if (focusedCheckbox) {
+        const inputLabel = focusedCheckbox.querySelector('.user-label-input');
+        if (inputLabel.value.length > 0) {
+            const selectionStart = inputLabel.selectionStart;
+            const selectionEnd = inputLabel.selectionEnd;
+            if (selectionStart !== selectionEnd) {
+                inputLabel.value = inputLabel.value.slice(0, selectionStart) + inputLabel.value.slice(selectionEnd);
+                inputLabel.selectionStart = inputLabel.selectionEnd = selectionStart;
+            } else if (selectionStart > 0) {
+                inputLabel.value = inputLabel.value.slice(0, selectionStart - 1) + inputLabel.value.slice(selectionStart);
+                inputLabel.selectionStart = inputLabel.selectionEnd = selectionStart - 1;
+            }
+        } else if (!focusedCheckbox.isSameNode(document.querySelector('.checkbox-wrapper'))) {
+            const previousCheckbox = focusedCheckbox.previousElementSibling;
+            focusedCheckbox.remove();
 
-        if (previousCheckbox) {
-            const inputLabel = previousCheckbox.querySelector('.user-label-input');
-            inputLabel.focus();
+            if (previousCheckbox) {
+                const inputLabel = previousCheckbox.querySelector('.user-label-input');
+                inputLabel.focus();
+            }
         }
     }
 }
+
+
 
 
 
