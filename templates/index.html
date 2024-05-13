@@ -1,13 +1,24 @@
 {% extends "base.html" %}
 
-{% block title %}SeatGeek Alerts{% endblock %}
+{% block title %}Itinerary Planner{% endblock %}
 
 {% block content %}
     <link rel="stylesheet" href="../static/css/index.css">
+
     <div class="title-container">
         <div id="title">Itinerary Planner</div>
         <p id="date"></p>
-
     </div>
+
+    <div class="checklist-container">
+        <div class="checkbox-wrapper">
+            <input type="checkbox" id="cbx-1" class="inp-cbx" />
+            <label for="cbx-1" class="cbx">
+                <span><svg viewBox="0 0 12 10" height="10px" width="12px"><polyline points="1.5 6 4.5 9 10.5 1"></polyline></svg></span>
+                <input type="text" class="user-label-input" value=" " />
+            </label>
+        </div>
+    </div>
+
     <script src="../static/js/index.js" defer></script>
 {% endblock %}
