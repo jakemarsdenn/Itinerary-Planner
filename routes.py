@@ -13,6 +13,6 @@ def index():
 
 @app.route('/about', methods=['GET', 'POST'])
 def about():
-    return render_template('about.html', session=session)
+    return render_template('maps.html', session=session)
 
 

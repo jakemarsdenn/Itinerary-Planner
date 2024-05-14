@@ -1,5 +1,5 @@
 :root {
-  --blocky: "Space Grotesk", sans-serif;
+  --blocky: 'Space Grotesk', sans-serif;
   --smooth: 'Metropolis', sans-serif;
 }
 
@@ -26,7 +26,7 @@ h1 {
 p {
   color: black;
   font-family: var(--smooth);
-  font-weight: 500;
+  font-weight: 300;
   font-size: 18px;
   margin-top: 0;
   margin-bottom: 0;
@@ -42,6 +42,6 @@ p {
   text-align: left;
   position: relative;
   margin-top: 200px;
-  margin-left: 200px;
-  margin-right: 200px;
+  margin-left: 350px;
+  margin-right: 350px;
 }
