@@ -106,3 +106,9 @@
     margin-left: 8px;
     width: auto;
 }
+
+.checkbox-wrapper input[type="checkbox"]:checked + .cbx .user-label-input {
+    /*text-decoration: line-through;*/
+    /*text-decoration-thickness: 2px;*/
+    color: grey;
+}
