@@ -11,19 +11,17 @@
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300..700&display=swap" rel="stylesheet">
     <link href="https://fonts.cdnfonts.com/css/metropolis-2" rel="stylesheet">
     <title>{% block title %}{% endblock %}</title>
-    <!-- Header  -->
     <div class="header">
-        <!-- Home Button  -->
-        <form action="/" method="post">
-            <button id="home-button">
-                <img src="../static/media/home-button.png" alt="" width="68" height="25">
-            </button>
-        </form>
-        <!-- Links  -->
-        <div class="links">
-            <form action="/about" method="post">
-                <button id="header-button">About</button>
-            </form>
+        <a id="home-button" href="/">
+            <img src="../static/media/home-button.png" alt="" width="68" height="25">
+        </a>
+        <div class="dropdown">
+            <a id="header-button">Services</a>
+            <div class="dropdown-content">
+                <a href="/about">About</a>
+                <a href="/">Link 2</a>
+                <a href="/">Link 3</a>
+            </div>
         </div>
     </div>
 </head>

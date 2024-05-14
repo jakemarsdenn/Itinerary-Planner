@@ -57,9 +57,7 @@ p {
   z-index: 1000;
 }
 
-.links {
-  display: flex;
-}
+
 
 #home-button {
   background-color: transparent;
@@ -72,9 +70,9 @@ p {
 #header-button {
   background-color: transparent;
   color: rgb(115,115,115);
-  font-family: var(--smooth);
   font-weight: 500;
   font-size: 20px;
+  text-decoration: none;
   line-height: 2px;
   text-align: center;
   border: none;
@@ -82,18 +80,42 @@ p {
   box-sizing: border-box;
   padding: 0.75rem;
   cursor: pointer;
-  margin-top: 28px;
-  margin-right: 200px;
 }
 
-#home-button:hover, #header-button:hover {
+#home-button:hover, #header-button:hover, .dropdown:hover #header-button {
   filter: brightness(1.4);
 }
 
+.dropdown {
+  position: relative;
+  display: inline-block;
+  margin-top: 28px;
+  margin-right: 200px;
+  font-family: var(--smooth);
+}
 
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f9f9f9;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+  border-radius: 8px;
+}
 
+.dropdown-content a {
+  color: rgb(115,115,115);
+  font-weight: 500;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+}
 
+.dropdown-content a:hover {
+  background-color: #f1f1f1;
+}
 
-
-
-
+.dropdown:hover .dropdown-content {
+  display: block;
+}
