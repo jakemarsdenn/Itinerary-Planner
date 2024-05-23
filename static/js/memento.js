@@ -2,18 +2,15 @@ window.addEventListener("DOMContentLoaded", function() {
     loadChecklist();
 });
 
-
 window.addEventListener("beforeunload", function() {
     saveChecklist();
 });
-
 
 class ChecklistMemento {
     constructor(checklistState) {
         this.checklistState = checklistState;
     }
 }
-
 
 function saveChecklist() {
     const checklistState = [];
@@ -33,7 +30,6 @@ function saveChecklist() {
     localStorage.setItem('checklistMemento', JSON.stringify(checklistMemento));
 }
 
-
 function loadChecklist() {
     const checklistMementoJson = localStorage.getItem('checklistMemento');
 
@@ -47,5 +43,7 @@ function loadChecklist() {
         checklistState.forEach(item => {
             createCheckbox(item.checked, item.label);
         });
+    } else {
+        console.log('No checklist state found in local storage.');
     }
 }

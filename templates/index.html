@@ -1,27 +1,34 @@
 {% extends "base.html" %}
 
-{% block title %}Itinerary Planner{% endblock %}
+{% block title %}
+    Itinerary Planner
+{% endblock %}
 
 {% block content %}
-    <link rel="stylesheet" href="../static/css/checklist.css">
-    <link rel="stylesheet" href="../static/css/title.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/checklist.css', version='1.0') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/title.css', version='1.0') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css', version='1.0') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/header.css') }}">
 
     <div class="title-container">
         <div id="title">Itinerary Planner</div>
         <p id="date"></p>
     </div>
-
-    <div class="checklist-container">
-        <div class="checkbox-wrapper">
-            <input type="checkbox" id="cbx-1" class="inp-cbx" />
-            <label for="cbx-1" class="cbx">
-                <span><svg viewBox="0 0 12 10" height="10px" width="12px"><polyline points="1.5 6 4.5 9 10.5 1"></polyline></svg></span>
-                <input type="text" class="user-label-input" placeholder="activity" />
-            </label>
+    
+    <div class="form-container">
+        <div class="checklist-container">
+            <!-- Checkboxes will be dynamically added here -->
         </div>
+        <form id="tasks-form" method="POST" action="{{ url_for('plan') }}">
+            <div id="tasks-container"></div>
+            <div class="button-container">
+                <button type="button" onclick="addTask()">Add Task</button>
+                <button type="submit">Plan</button>
+            </div>
+        </form>
     </div>
-
-    <script src="../static/js/checklist.js" defer></script>
-    <script src="../static/js/memento.js" defer></script>
-    <script src="../static/js/title.js" defer></script>
+    
+    <script src="{{ url_for('static', filename='js/checklist.js', version='1.0') }}" defer></script>
+    <script src="{{ url_for('static', filename='js/memento.js', version='1.0') }}" defer></script>
+    <script src="{{ url_for('static', filename='js/title.js', version='1.0') }}" defer></script>
 {% endblock %}

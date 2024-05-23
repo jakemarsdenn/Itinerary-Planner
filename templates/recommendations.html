@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Recommendations for {{ task }}
+{% endblock %}
+
+{% block content %}
+    <h1>Recommendations for {{ task }}</h1>
+    <ul class="recommendations-list">
+        {% for recommendation in recommendations %}
+        <li class="recommendation-item">
+            <img src="{{ recommendation.image_url }}" alt="{{ recommendation.name }}" class="recommendation-image">
+            <div class="recommendation-details">
+                <h2>{{ recommendation.name }} - {{ recommendation.rating }} stars</h2>
+                <p>{{ recommendation.location.address1 }}, {{ recommendation.location.city }}</p>
+                <button class="get-directions" data-lat="{{ recommendation.coordinates.latitude }}" data-lon="{{ recommendation.coordinates.longitude }}">Get Directions</button>
+            </div>
+        </li>
+        {% endfor %}
+    </ul>
+    <div id="map" style="height: 500px; width: 100%;"></div>
+    <script>
+        let map;
+        async function initMap() {
+            const { Map } = await google.maps.importLibrary("maps");
+            const { DirectionsService, DirectionsRenderer } = await google.maps.importLibrary("directions");
+            const directionsService = new DirectionsService();
+            const directionsRenderer = new DirectionsRenderer();
+            map = new Map(document.getElementById("map"), {
+                zoom: 7,
+                center: { lat: 41.85, lng: -87.65 },
+            });
+            directionsRenderer.setMap(map);
+            document.querySelectorAll('.get-directions').forEach(button => {
+                button.addEventListener('click', () => {
+                    const lat = button.getAttribute('data-lat');
+                    const lon = button.getAttribute('data-lon');
+                    calculateAndDisplayRoute(directionsService, directionsRenderer, lat, lon);
+                });
+            });
+        }
+
+        function calculateAndDisplayRoute(directionsService, directionsRenderer, lat, lon) {
+            directionsService.route(
+                {
+                    origin: { query: 'Los Angeles, CA' }, // Change this to your starting location
+                    destination: { lat: parseFloat(lat), lng: parseFloat(lon) },
+                    travelMode: google.maps.TravelMode.DRIVING,
+                },
+                (response, status) => {
+                    if (status === 'OK') {
+                        directionsRenderer.setDirections(response);
+                    } else {
+                        window.alert('Directions request failed due to ' + status);
+                    }
+                }
+            );
+        }
+        window.onload = initMap;
+    </script>
+{% endblock %}

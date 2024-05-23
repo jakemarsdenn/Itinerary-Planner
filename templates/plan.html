@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plan</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+    <script src="https://maps.googleapis.com/maps/api/js?key={{ GOOGLE_MAPS_API_KEY }}&libraries=places&callback=initMap" async defer></script>
+    <script>
+        let map, directionsService, directionsRenderer;
+
+        function initMap() {
+            directionsService = new google.maps.DirectionsService();
+            directionsRenderer = new google.maps.DirectionsRenderer();
+
+            map = new google.maps.Map(document.getElementById('map'), {
+                zoom: 7,
+                center: { lat: 41.85, lng: -87.65 }
+            });
+
+            directionsRenderer.setMap(map);
+
+            document.querySelectorAll('.get-directions').forEach(button => {
+                button.addEventListener('click', () => {
+                    const lat = parseFloat(button.getAttribute('data-lat'));
+                    const lon = parseFloat(button.getAttribute('data-lon'));
+                    calculateAndDisplayRoute(lat, lon);
+                });
+            });
+        }
+
+        function calculateAndDisplayRoute(lat, lon) {
+            directionsService.route(
+                {
+                    origin: 'Chicago, IL',
+                    destination: { lat: lat, lng: lon },
+                    travelMode: google.maps.TravelMode.DRIVING,
+                },
+                (response, status) => {
+                    if (status === 'OK') {
+                        directionsRenderer.setDirections(response);
+                    } else {
+                        alert('Directions request failed due to ' + status);
+                    }
+                }
+            );
+        }
+
+        window.onload = initMap;
+    </script>
+</head>
+<body>
+    <h1>Plan for {{ task }}</h1>
+    <h2>Best Beaches</h2>
+    <ul>
+        {% for beach in beaches %}
+        <li>
+            {{ beach.name }} - {{ beach.rating }} stars
+            <button class="get-directions" data-lat="{{ beach.coordinates.latitude }}" data-lon="{{ beach.coordinates.longitude }}">Get Directions</button>
+        </li>
+        {% endfor %}
+    </ul>
+    <h2>Best Restaurants</h2>
+    <ul>
+        {% for restaurant in restaurants %}
+        <li>
+            {{ restaurant.name }} - {{ restaurant.rating }} stars
+            <button class="get-directions" data-lat="{{ restaurant.coordinates.latitude }}" data-lon="{{ restaurant.coordinates.longitude }}">Get Directions</button>
+        </li>
+        {% endfor %}
+    </ul>
+    <div id="map" style="height: 500px; width: 100%;"></div>
+</body>
+</html>
