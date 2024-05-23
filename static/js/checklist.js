@@ -1,6 +1,7 @@
 document.addEventListener('DOMContentLoaded', function() {
     try {
         initChecklist();
+        loadTasksFromLocalStorage();
     } catch (error) {
         console.error('Initialization error:', error);
     }
@@ -42,6 +43,21 @@ function createCheckbox(checked = false, label = '') {
     // Add event listener for delete button
     newCheckboxWrapper.querySelector('.delete-task-button').addEventListener('click', function() {
         newCheckboxWrapper.remove();
+        saveTasksToLocalStorage(); // Save tasks after deletion
+    });
+
+    // Add event listener for task checkbox
+    newCheckboxWrapper.querySelector('.inp-cbx').addEventListener('change', function() {
+        if (this.checked) {
+            newCheckboxWrapper.classList.add('completed');
+            setTimeout(() => {
+                newCheckboxWrapper.remove();
+                saveTasksToLocalStorage(); // Save tasks after deletion
+            }, 1000);
+        } else {
+            newCheckboxWrapper.classList.remove('completed');
+        }
+        saveTasksToLocalStorage(); // Save tasks after checkbox change
     });
 }
 
@@ -49,21 +65,22 @@ function deleteCheckbox() {
     const focusedCheckbox = document.activeElement.closest('.checkbox-wrapper');
     if (focusedCheckbox) {
         focusedCheckbox.remove();
+        saveTasksToLocalStorage(); // Save tasks after deletion
     }
 }
 
-function addTask(task = '', location = '') {
+function addTask(task = '', location = '', checked = false) {
     const taskContainer = document.getElementById('tasks-container');
     const taskEntry = document.createElement('div');
     taskEntry.classList.add('task-entry');
     taskEntry.innerHTML = `
-    <label class="task-label">Task:</label>
-    <input type="text" class="user-label-input" placeholder="Task" name="task" value="" required />
-    <label class="location-label">Location:</label>
-    <input type="text" class="user-label-input" placeholder="Location" name="location" value="" required />
-    <input type="checkbox" class="task-checkbox">
-    <button type="button" class="recommendations-button">Recommendations</button>
-    <button type="button" class="delete-task-button">Delete</button>
+        <input type="checkbox" class="task-checkbox" ${checked ? 'checked' : ''}>
+        <label class="task-label">Task:</label>
+        <input type="text" class="user-label-input" placeholder="Task" name="task" value="${task}" required />
+        <label class="location-label">Location:</label>
+        <input type="text" class="user-label-input" placeholder="Location" name="location" value="${location}" required />
+        <button type="button" class="recommendations-button">Recommendations</button>
+        <button type="button" class="delete-task-button">Delete</button>
     `;
 
     taskContainer.appendChild(taskEntry);
@@ -71,6 +88,7 @@ function addTask(task = '', location = '') {
     // Add event listener for delete button
     taskEntry.querySelector('.delete-task-button').addEventListener('click', function() {
         taskEntry.remove();
+        saveTasksToLocalStorage(); // Save tasks after deletion
     });
 
     // Add event listener for recommendations button
@@ -84,34 +102,44 @@ function addTask(task = '', location = '') {
         }
     });
 
-
     // Add event listener for task checkbox
-  taskEntry.querySelector('.task-checkbox').addEventListener('change', function() {
-    if (this.checked) {
-        taskEntry.classList.add('completed');
-        setTimeout(() => {
-            taskEntry.remove();
-        }, 1000);
-    }
-});
+    taskEntry.querySelector('.task-checkbox').addEventListener('change', function() {
+        if (this.checked) {
+            taskEntry.classList.add('completed');
+            setTimeout(() => {
+                taskEntry.remove();
+                saveTasksToLocalStorage(); // Save tasks after deletion
+            }, 1000);
+        } else {
+            taskEntry.classList.remove('completed');
+        }
+        saveTasksToLocalStorage(); // Save tasks after checkbox change
+    });
 
-
+    saveTasksToLocalStorage(); // Save tasks after adding a new one
 }
 
-
-
-
-window.onload = function() {
-    const savedTasks = JSON.parse(localStorage.getItem('tasks')) || [];
-    savedTasks.forEach(task => addTask(task.task, task.location));
-};
-
-window.onbeforeunload = function() {
+function saveTasksToLocalStorage() {
     const tasks = [];
     document.querySelectorAll('.task-entry').forEach(taskEntry => {
         const task = taskEntry.querySelector('input[name="task"]').value;
         const location = taskEntry.querySelector('input[name="location"]').value;
-        tasks.push({ task, location });
+        const checked = taskEntry.querySelector('.task-checkbox').checked;
+        tasks.push({ task, location, checked });
     });
     localStorage.setItem('tasks', JSON.stringify(tasks));
+}
+
+function loadTasksFromLocalStorage() {
+    const savedTasks = JSON.parse(localStorage.getItem('tasks')) || [];
+    document.getElementById('tasks-container').innerHTML = ''; // Clear existing tasks to prevent duplication
+    savedTasks.forEach(task => addTask(task.task, task.location, task.checked));
+}
+
+window.onload = function() {
+    loadTasksFromLocalStorage();
+};
+
+window.onbeforeunload = function() {
+    saveTasksToLocalStorage();
 };

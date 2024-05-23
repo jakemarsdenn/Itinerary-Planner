@@ -123,3 +123,160 @@ p {
   background-color: #4CAF50; /* Green background */
   color: white; /* White text */
 }
+
+/* Checklist styles */
+.checklist-container {
+  position: relative;
+  margin-top: 15px; /* Reduced margin */
+  width: 100%;
+}
+
+.task-entry {
+  display: flex;
+  align-items: center;
+  gap: 5px; /* Reduced gap */
+  margin-bottom: 5px; /* Reduced margin */
+  width: 100%;
+}
+
+.user-label-input {
+  flex: 1;
+  padding: 3px; /* Smaller padding */
+  font-size: 14px; /* Smaller font size */
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.checkbox-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 5px; /* Reduced margin */
+}
+
+.checkbox-wrapper input[type="checkbox"] {
+  display: none;
+  visibility: hidden;
+}
+
+.checkbox-wrapper .cbx {
+  margin: auto;
+  -webkit-user-select: none;
+  user-select: none;
+  cursor: pointer;
+}
+
+.checkbox-wrapper .cbx span {
+  display: inline-block;
+  vertical-align: middle;
+  transform: translate3d(0, 0, 0);
+}
+
+.checkbox-wrapper .cbx span:first-child {
+  position: relative;
+  width: 16px; /* Reduced size */
+  height: 16px; /* Reduced size */
+  border-radius: 3px;
+  transform: scale(1);
+  vertical-align: middle;
+  border: 1px solid #9098a9;
+  transition: all 0.2s ease;
+}
+
+.checkbox-wrapper .cbx span:first-child svg {
+  position: absolute;
+  top: 2px; /* Adjusted position */
+  left: 2px;
+  fill: none;
+  stroke: #ffffff;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 16px;
+  stroke-dashoffset: 16px;
+  transition: all 0.3s ease;
+  transition-delay: 0.1s;
+  transform: translate3d(0, 0, 0);
+}
+
+.checkbox-wrapper .cbx span:first-child:before {
+  content: "";
+  width: 100%;
+  height: 100%;
+  background: #506eec;
+  display: block;
+  transform: scale(0);
+  opacity: 1;
+  border-radius: 50%;
+}
+
+.checkbox-wrapper .cbx span:last-child {
+  padding-left: 6px; /* Reduced padding */
+}
+
+.checkbox-wrapper .cbx:hover span:first-child {
+  border-color: #506eec;
+}
+
+.checkbox-wrapper .inp-cbx:checked + .cbx span:first-child {
+  background: #506eec;
+  border-color: #506eec;
+  animation: wave-46 0.4s ease;
+}
+
+.checkbox-wrapper .inp-cbx:checked + .cbx span:first-child svg {
+  stroke-dashoffset: 0;
+}
+
+.checkbox-wrapper .inp-cbx:checked + .cbx span:first-child:before {
+  transform: scale(3.5);
+  opacity: 0;
+  transition: all 0.6s ease;
+}
+
+@keyframes wave-46 {
+  50% {
+    transform: scale(0.9);
+  }
+}
+
+.checkbox-wrapper input[type="checkbox"]:checked + .cbx .user-label-input {
+  color: grey;
+}
+
+.directions-button,
+.recommendations-button,
+.delete-task-button {
+  padding: 5px 10px; /* Smaller padding */
+  font-size: 14px; /* Smaller font size */
+  cursor: pointer;
+  border: none;
+  border-radius: 4px;
+  width: 130px; /* Reduced width */
+}
+
+.directions-button,
+.recommendations-button {
+  background-color: #4CAF50; /* Green background */
+  color: white; /* White text */
+}
+
+.delete-task-button {
+  background-color: red;
+  color: white;
+}
+
+.task-label,
+.location-label {
+  font-weight: bold;
+  font-size: 18px; /* Reduced font size */
+  margin-right: 5px;
+  white-space: nowrap;
+}
+
+/* Completed task style */
+.task-entry.completed {
+  text-decoration: line-through;
+  opacity: 0.5;
+  transition: opacity 1s ease-out;
+}
