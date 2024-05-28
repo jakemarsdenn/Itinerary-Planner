@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=Edge">
-    <link rel="icon" type="image/x-icon" href="../static/media/favicon.ico">
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='favicon.ico') }}">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../static/css/main.css">
-    <link rel="stylesheet" href="../static/css/header.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/header.css') }}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300..700&display=swap" rel="stylesheet">
@@ -14,7 +14,7 @@
     <title>{% block title %}{% endblock %}</title>
     <div class="header">
         <a id="home-button" href="/">
-            <img src="../static/media/home-button.png" alt="" width="68" height="25">
+            <img src="{{ url_for('static', filename='media/home-button.png') }}" alt="" width="68" height="25">
         </a>
         <div class="dropdown">
             <a id="header-button">Services</a>

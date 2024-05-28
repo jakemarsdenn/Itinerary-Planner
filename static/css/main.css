@@ -59,7 +59,7 @@ p {
   justify-content: center;
   width: 100%;
   max-width: 800px;
-  padding: 15px; /* Reduced padding */
+  padding: 15px;
   border: none;
   border-radius: 8px;
   box-sizing: border-box;
@@ -69,14 +69,14 @@ p {
 .button-container {
   display: flex;
   gap: 10px;
-  margin-top: 15px; /* Reduced margin */
+  margin-top: 15px;
   width: 100%;
 }
 
 .button-container button {
   flex: 1;
-  padding: 5px 10px; /* Smaller padding */
-  font-size: 14px; /* Smaller font size */
+  padding: 5px 10px;
+  font-size: 14px;
   cursor: pointer;
 }
 
@@ -84,26 +84,32 @@ p {
   list-style-type: none;
   padding: 0;
   margin: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 20px;
+  width: 100%;
+  max-width: 1200px;
 }
 
 .recommendation-item {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  margin-bottom: 20px;
   border: 1px solid #ccc;
   border-radius: 8px;
   overflow: hidden;
+  background: #fff;
 }
 
 .recommendation-image {
-  width: 150px;
-  height: 150px;
+  width: 100%;
+  height: 200px;
   object-fit: cover;
 }
 
 .recommendation-details {
-  flex: 1;
   padding: 10px;
+  text-align: center;
 }
 
 .recommendation-details h2 {
@@ -115,34 +121,34 @@ p {
 }
 
 .get-directions {
-  padding: 5px 10px; /* Adjusted padding */
-  font-size: 14px; /* Adjusted font size */
+  padding: 5px 10px;
+  font-size: 14px;
   cursor: pointer;
   border: none;
   border-radius: 4px;
-  background-color: #4CAF50; /* Green background */
-  color: white; /* White text */
+  background-color: #4CAF50;
+  color: white;
 }
 
 /* Checklist styles */
 .checklist-container {
   position: relative;
-  margin-top: 15px; /* Reduced margin */
+  margin-top: 15px;
   width: 100%;
 }
 
 .task-entry {
   display: flex;
   align-items: center;
-  gap: 5px; /* Reduced gap */
-  margin-bottom: 5px; /* Reduced margin */
+  gap: 5px;
+  margin-bottom: 5px;
   width: 100%;
 }
 
 .user-label-input {
   flex: 1;
-  padding: 3px; /* Smaller padding */
-  font-size: 14px; /* Smaller font size */
+  padding: 3px;
+  font-size: 14px;
   border: 1px solid #ccc;
   border-radius: 4px;
 }
@@ -151,7 +157,7 @@ p {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-bottom: 5px; /* Reduced margin */
+  margin-bottom: 5px;
 }
 
 .checkbox-wrapper input[type="checkbox"] {
@@ -174,8 +180,8 @@ p {
 
 .checkbox-wrapper .cbx span:first-child {
   position: relative;
-  width: 16px; /* Reduced size */
-  height: 16px; /* Reduced size */
+  width: 16px;
+  height: 16px;
   border-radius: 3px;
   transform: scale(1);
   vertical-align: middle;
@@ -185,7 +191,7 @@ p {
 
 .checkbox-wrapper .cbx span:first-child svg {
   position: absolute;
-  top: 2px; /* Adjusted position */
+  top: 2px;
   left: 2px;
   fill: none;
   stroke: #ffffff;
@@ -211,7 +217,7 @@ p {
 }
 
 .checkbox-wrapper .cbx span:last-child {
-  padding-left: 6px; /* Reduced padding */
+  padding-left: 6px;
 }
 
 .checkbox-wrapper .cbx:hover span:first-child {
@@ -247,18 +253,18 @@ p {
 .directions-button,
 .recommendations-button,
 .delete-task-button {
-  padding: 5px 10px; /* Smaller padding */
-  font-size: 14px; /* Smaller font size */
+  padding: 5px 10px;
+  font-size: 14px;
   cursor: pointer;
   border: none;
   border-radius: 4px;
-  width: 130px; /* Reduced width */
+  width: 130px;
 }
 
 .directions-button,
 .recommendations-button {
-  background-color: #4CAF50; /* Green background */
-  color: white; /* White text */
+  background-color: #4CAF50;
+  color: white;
 }
 
 .delete-task-button {
@@ -269,14 +275,15 @@ p {
 .task-label,
 .location-label {
   font-weight: bold;
-  font-size: 18px; /* Reduced font size */
+  font-size: 18px;
   margin-right: 5px;
   white-space: nowrap;
 }
 
-/* Completed task style */
 .task-entry.completed {
   text-decoration: line-through;
   opacity: 0.5;
   transition: opacity 1s ease-out;
 }
+
+/*this is the latest version^
