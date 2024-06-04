@@ -39,7 +39,7 @@ def survey_recommendation():
     physicality_level = request.form.get('physicality-preference')
     recommended_activity = recommend_activity(weather, time_of_day, budget, environment, group_size, physicality_level)
     print("recommended_activity: " + recommended_activity)
-    return redirect("/")
+    return redirect("/")  # NOT WORKING
 
 
 @app.route('/plan', methods=['POST'])
