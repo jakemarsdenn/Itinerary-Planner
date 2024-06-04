@@ -1,17 +1,16 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User Survey</title>
+{% extends "base.html" %}
+
+{% block title %}Survey{% endblock %}
+
+{% block content %}
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f9f9f9;
-            margin: 0;
-            padding: 0;
+
+        .wrapper {
+            font-family: var(--smooth);
+            margin-top: 50px;
         }
 
         .container {
@@ -19,12 +18,16 @@
             margin: 50px auto;
             padding: 20px;
             background: white;
+            border-radius: 5px;
             box-shadow: 0 0 10px rgba(0,0,0,0.1);
         }
 
-        h1 {
+        .card-title {
             text-align: center;
-            color: #333;
+            color: black;
+            font-family: var(--blocky);
+            font-size: 35px;
+            font-weight: bold;
         }
 
         .progress-bar {
@@ -37,86 +40,90 @@
 
         .btn {
             margin-top: 20px;
+            background-color: #4CAF50;
+            font-weight: bold;
         }
     </style>
-</head>
-<body>
-    <div class="container mt-5">
-        <div class="card">
-            <div class="card-body">
-                <h1 class="card-title text-center">User Preferences Survey</h1>
-                <div class="progress mb-4">
-                    <div id="progress-bar" class="progress-bar" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">Select</div>
+
+    <div class="wrapper">
+        <div class="container mt-5">
+            <div class="card">
+                <div class="card-body">
+                    <div class="card-title">User Preferences Survey</div>
+                    <div class="progress mb-4">
+                        <div id="progress-bar" class="progress-bar" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">Select</div>
+                    </div>
+                    <form id="survey-form">
+                        <fieldset>
+                            <div class="form-group">
+                                <label for="weather-preference"><i class="fas fa-sun"></i> What is the current weather forecast?</label>
+                                <select class="form-control" id="weather-preference" name="weather-preference" required>
+                                    <option value="">Select...</option>
+                                    <option value="sunny">Sunny</option>
+                                    <option value="cloudy">Cloudy</option>
+                                    <option value="rainy">Rainy</option>
+                                    <option value="snowy">Snowy</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="time-preference"><i class="fas fa-clock"></i> What time of day will the activity take place?</label>
+                                <select class="form-control" id="time-preference" name="time-preference" required>
+                                    <option value="">Select...</option>
+                                    <option value="morning">Morning</option>
+                                    <option value="afternoon">Afternoon</option>
+                                    <option value="evening">Evening</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="budget-preference"><i class="fas fa-dollar-sign"></i> What is your budget for the activity?</label>
+                                <select class="form-control" id="budget-preference" name="budget-preference" required>
+                                    <option value="">Select...</option>
+                                    <option value="low">Low</option>
+                                    <option value="medium">Medium</option>
+                                    <option value="high">High</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="physicality-preference"><i class="fas fa-running"></i> What physicality do you prefer?</label>
+                                <select class="form-control" id="physicality-preference" name="physicality-preference" required>
+                                    <option value="">Select...</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="environment-preference"><i class="fas fa-tree"></i> What environment do you prefer?</label>
+                                <select class="form-control" id="environment-preference" name="environment-preference" required>
+                                    <option value="">Select...</option>
+                                    <option value="indoors">Indoors</option>
+                                    <option value="outdoors">Outdoors</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="group-preference"><i class="fas fa-users"></i> What group size do you prefer?</label>
+                                <select class="form-control" id="group-preference" name="group-preference" required>
+                                    <option value="">Select...</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                    <option value="4+">4+</option>
+                                </select>
+                            </div>
+                        </fieldset>
+
+                        <button type="submit" class="btn btn-success btn-block">Submit</button>
+                    </form>
                 </div>
-                <form id="survey-form">
-                    <fieldset>
-                        <div class="form-group">
-                            <label for="weather-preference"><i class="fas fa-sun"></i> What weather do you prefer?</label>
-                            <select class="form-control" id="weather-preference" name="weather-preference" required>
-                                <option value="">Select...</option>
-                                <option value="sunny">Sunny</option>
-                                <option value="cloudy">Cloudy</option>
-                                <option value="rainy">Rainy</option>
-                                <option value="snowy">Snowy</option>
-                            </select>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="time-preference"><i class="fas fa-clock"></i> What time of day do you prefer?</label>
-                            <select class="form-control" id="time-preference" name="time-preference" required>
-                                <option value="">Select...</option>
-                                <option value="morning">Morning</option>
-                                <option value="afternoon">Afternoon</option>
-                                <option value="evening">Evening</option>
-                            </select>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="budget-preference"><i class="fas fa-dollar-sign"></i> What is your budget for your activities?</label>
-                            <select class="form-control" id="budget-preference" name="budget-preference" required>
-                                <option value="">Select...</option>
-                                <option value="low">Low</option>
-                                <option value="medium">Medium</option>
-                                <option value="high">High</option>
-                            </select>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="physicality-preference"><i class="fas fa-running"></i> How physical do you want recommendations to be? (3 being most physical)</label>
-                            <select class="form-control" id="physicality-preference" name="physicality-preference" required>
-                                <option value="">Select...</option>
-                                <option value="1">1</option>
-                                <option value="2">2</option>
-                                <option value="3">3</option>
-                            </select>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="environment-preference"><i class="fas fa-tree"></i> What environment do you prefer?</label>
-                            <select class="form-control" id="environment-preference" name="environment-preference" required>
-                                <option value="">Select...</option>
-                                <option value="indoors">Indoors</option>
-                                <option value="outdoors">Outdoors</option>
-                            </select>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="group-preference"><i class="fas fa-users"></i> What group size do you want recommendations to be geared towards?</label>
-                            <select class="form-control" id="group-preference" name="group-preference" required>
-                                <option value="">Select...</option>
-                                <option value="1">1</option>
-                                <option value="2">2</option>
-                                <option value="3">3</option>
-                                <option value="4+">4+</option>
-                            </select>
-                        </div>
-                    </fieldset>
-
-                    <button type="submit" class="btn btn-success btn-block">Submit</button>
-                </form>
             </div>
         </div>
     </div>
+
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const form = document.getElementById('survey-form');
@@ -164,18 +171,18 @@
                     },
                     body: JSON.stringify(surveyData),
                 })
-                .then(response => response.json())
-                .then(data => {
-                    alert('Survey submitted! Thank you for your input.');
+                    .then(response => response.json())
+                    .then(data => {
+                        alert('Survey submitted! Thank you for your input.');
 
-                    // Redirect to the main page after 2 seconds
-                    setTimeout(() => {
-                        window.location.href = 'base.html'; // Replace 'base.html' with the actual main page URL of your app
-                    }, 2000);
-                })
-                .catch((error) => {
-                    console.error('Error:', error);
-                });
+                        // Redirect to the main page after 2 seconds
+                        setTimeout(() => {
+                            window.location.href = 'base.html'; // Replace 'base.html' with the actual main page URL of your app
+                        }, 2000);
+                    })
+                    .catch((error) => {
+                        console.error('Error:', error);
+                    });
             });
 
             function updateProgress() {
@@ -190,13 +197,8 @@
                 progressBar.style.width = `${progress}%`;
                 progressBar.setAttribute('aria-valuenow', progress);
 
-                if (progress === 0) {
-                    progressBar.innerText = 'Select';
-                } else {
-                    progressBar.innerText = `${Math.round(progress)}%`;
-                }
+                progressBar.innerText = `${filledFields}/${totalFields}`;
             }
         });
     </script>
-</body>
-</html>
+{% endblock %}
