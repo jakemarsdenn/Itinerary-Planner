@@ -23,6 +23,11 @@ def weather():
     return render_template('weather.html')
 
 
+@app.route('/survey')
+def survey():
+    return render_template('survey.html')
+
+
 @app.route('/plan', methods=['POST'])
 def plan():
     try:
