@@ -1,4 +1,5 @@
 from flask import Flask, render_template, request, redirect, url_for
+from model import recommend_activity
 import requests
 
 app = Flask(__name__)
@@ -26,6 +27,19 @@ def weather():
 @app.route('/survey')
 def survey():
     return render_template('survey.html')
+
+
+@app.route('/submit-survey', methods=['POST'])
+def survey_recommendation():
+    weather = request.form.get('weather-preference')
+    time_of_day = request.form.get('time-preference')
+    budget = request.form.get('budget-preference')
+    environment = request.form.get('environment-preference')
+    group_size = request.form.get('group-preference')
+    physicality_level = request.form.get('physicality-preference')
+    recommended_activity = recommend_activity(weather, time_of_day, budget, environment, group_size, physicality_level)
+    print("recommended_activity: " + recommended_activity)
+    return redirect("/")
 
 
 @app.route('/plan', methods=['POST'])
