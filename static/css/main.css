@@ -25,6 +25,12 @@ h1 {
   font-size: 40px;
 }
 
+h2 {
+  color: black;
+  font-family: var(--smooth);
+  font-size: 20px;
+}
+
 p {
   color: black;
   font-family: var(--smooth);
@@ -45,11 +51,6 @@ p {
   margin-top: 200px;
   margin-left: 350px;
   margin-right: 350px;
-}
-
-.title-container {
-  text-align: center;
-  margin-bottom: 20px;
 }
 
 .form-container {
@@ -108,8 +109,15 @@ p {
 }
 
 .recommendation-details {
+  font-family: var(--smooth);
+  font-size: 16px;
   padding: 10px;
   text-align: center;
+}
+
+.rating,.eta,.distance {
+  font-family: var(--smooth);
+  font-size: 16px;
 }
 
 .recommendation-details h2 {
@@ -121,6 +129,7 @@ p {
 }
 
 .get-directions {
+  font-family: var(--smooth);
   padding: 5px 10px;
   font-size: 14px;
   cursor: pointer;
@@ -253,12 +262,13 @@ p {
 .directions-button,
 .recommendations-button,
 .delete-task-button {
+  font-family: var(--smooth);
   padding: 5px 10px;
   font-size: 14px;
   cursor: pointer;
   border: none;
   border-radius: 4px;
-  width: 130px;
+  width: 145px;
 }
 
 .directions-button,
@@ -268,13 +278,15 @@ p {
 }
 
 .delete-task-button {
-  background-color: red;
+  background-color: #e36262;
   color: white;
+  width: 65px;
 }
 
 .task-label,
 .location-label {
-  font-weight: bold;
+  font-family: var(--smooth);
+  font-weight: 500;
   font-size: 18px;
   margin-right: 5px;
   white-space: nowrap;
@@ -286,4 +298,11 @@ p {
   transition: opacity 1s ease-out;
 }
 
-/*this is the latest version^
+.button-2 {
+  background-color: #ededed;
+  color: black;
+  border-radius: 4px;
+  border: none;
+}
+
+

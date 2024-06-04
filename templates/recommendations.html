@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}Maps{% endblock %}
+{% block title %}Recommendations{% endblock %}
 
 <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css', version='1.0') }}">
 <script src="https://maps.googleapis.com/maps/api/js?key={{ GOOGLE_MAPS_API_KEY }}&libraries=places,directions&callback=initMap" async defer></script>
@@ -45,14 +45,14 @@
 
 {% block content %}
     <body>
-        <h1>Recommendations for {{ task }}</h1>
+        <h1 style="margin-top:100px;">{{ task.title() }} Recommendations</h1>
         <ul class="recommendations-list">
             {% for recommendation in recommendations %}
             <li class="recommendation-item" data-lat="{{ recommendation.coordinates.latitude }}" data-lon="{{ recommendation.coordinates.longitude }}">
                 <img src="{{ recommendation.image_url }}" alt="{{ recommendation.name }}" class="recommendation-image">
                 <div class="recommendation-details">
                     <h2>{{ recommendation.name }}</h2>
-                    <p>{{ recommendation.rating }} stars</p>
+                    <p class="rating">{{ recommendation.rating }} stars</p>
                     <p class="eta">ETA: Calculating...</p>
                     <p class="distance">Distance: Calculating...</p>
                     <button class="get-directions" data-lat="{{ recommendation.coordinates.latitude }}" data-lon="{{ recommendation.coordinates.longitude }}">Get Directions</button>

@@ -15,7 +15,6 @@ function animateText() {
         span.classList.add("loading");
         text.appendChild(span);
     });
-    console.log("Text animated");
 }
 
 function displayLocalDate() {
@@ -23,6 +22,8 @@ function displayLocalDate() {
     const currentDate = new Date();
     const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
     const date = currentDate.toLocaleDateString(undefined, options);
-    dateElement.textContent = date;
-    console.log("Local date displayed:", date);
+    const parts = date.split(' ');
+    parts[2] += ',';
+    const formattedDate = parts.join(' ');
+    dateElement.textContent = formattedDate;
 }
