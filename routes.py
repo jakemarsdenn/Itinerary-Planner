@@ -7,41 +7,21 @@ app.secret_key = 'secret_key'
 YELP_API_KEY = '-xzPL1litWa31uPPsXYBUtvqKZFgMwA2sUdnAZfp_Wd2gj8UsrXiGYdYbPzHFv8BYMYw0Dam6eJpuj3hntP36joOQNIxzu0xJcCvDDllGHkZ77rSj-lQpr-CqO1MZnYx'  # Replace this with your actual Yelp API key
 GOOGLE_MAPS_API_KEY = 'AIzaSyAZJwxQoA5o9KxSNlmzFkK7qrw3b-5pehk'
 
-def search_yelp(term, location):
-    url = 'https://api.yelp.com/v3/businesses/search'
-    headers = {
-        'Authorization': f'Bearer {YELP_API_KEY}',
-    }
-    params = {
-        'term': term,
-        'location': location,
-        'limit': 4,  # Number of results to fetch
-        'sort_by': 'rating',  # Sort by best rating
-    }
-    response = requests.get(url, headers=headers, params=params)
-    return response.json()
-
-def calculate_distance_and_time(user_location, destination):
-    url = 'https://maps.googleapis.com/maps/api/directions/json'
-    params = {
-        'origin': f"{user_location['lat']},{user_location['lng']}",
-        'destination': f"{destination['latitude']},{destination['longitude']}",
-        'key': GOOGLE_MAPS_API_KEY
-    }
-    response = requests.get(url, params=params)
-    data = response.json()
-    if data['status'] == 'OK':
-        route = data['routes'][0]['legs'][0]
-        duration = route['duration']['text']
-        distance_km = route['distance']['value'] / 1000
-        distance_miles = distance_km * 0.621371
-        return duration, distance_miles
-    else:
-        return None, None
 
 @app.route('/')
 def index():
     return render_template('index.html', GOOGLE_MAPS_API_KEY=GOOGLE_MAPS_API_KEY)
+
+
+@app.route('/maps')
+def maps():
+    return render_template('maps.html')
+
+
+@app.route('/weather')
+def weather():
+    return render_template('weather.html')
+
 
 @app.route('/plan', methods=['POST'])
 def plan():
@@ -54,6 +34,7 @@ def plan():
     except Exception as e:
         print(f"Error: {e}")
         return "There was an error processing your request.", 500
+
 
 @app.route('/recommendations')
 def recommendations():
@@ -76,7 +57,36 @@ def recommendations():
         print(f"Error: {e}")
         return "There was an error processing your request.", 500
 
-if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0', port=5000)
 
-# This is the latest version ^
+def search_yelp(term, location):
+    url = 'https://api.yelp.com/v3/businesses/search'
+    headers = {
+        'Authorization': f'Bearer {YELP_API_KEY}',
+    }
+    params = {
+        'term': term,
+        'location': location,
+        'limit': 4,  # Number of results to fetch
+        'sort_by': 'rating',  # Sort by best rating
+    }
+    response = requests.get(url, headers=headers, params=params)
+    return response.json()
+
+
+def calculate_distance_and_time(user_location, destination):
+    url = 'https://maps.googleapis.com/maps/api/directions/json'
+    params = {
+        'origin': f"{user_location['lat']},{user_location['lng']}",
+        'destination': f"{destination['latitude']},{destination['longitude']}",
+        'key': GOOGLE_MAPS_API_KEY
+    }
+    response = requests.get(url, params=params)
+    data = response.json()
+    if data['status'] == 'OK':
+        route = data['routes'][0]['legs'][0]
+        duration = route['duration']['text']
+        distance_km = route['distance']['value'] / 1000
+        distance_miles = distance_km * 0.621371
+        return duration, distance_miles
+    else:
+        return None, None
