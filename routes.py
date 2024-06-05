@@ -1,15 +1,36 @@
-
-
-
 import random
 from flask import Flask, render_template, request, redirect, url_for, jsonify
+from model import recommend_activity
 import requests
+
 
 app = Flask(__name__)
 app.secret_key = 'secret_key'
 
+
 YELP_API_KEY = '-xzPL1litWa31uPPsXYBUtvqKZFgMwA2sUdnAZfp_Wd2gj8UsrXiGYdYbPzHFv8BYMYw0Dam6eJpuj3hntP36joOQNIxzu0xJcCvDDllGHkZ77rSj-lQpr-CqO1MZnYx'
 GOOGLE_MAPS_API_KEY = 'AIzaSyAZJwxQoA5o9KxSNlmzFkK7qrw3b-5pehk'
+
+
+@app.route('/')
+def index():
+    return render_template('index.html', GOOGLE_MAPS_API_KEY=GOOGLE_MAPS_API_KEY)
+
+
+@app.route('/maps')
+def maps():
+    return render_template('maps.html')
+
+
+@app.route('/weather')
+def weather():
+    return render_template('weather.html')
+
+
+@app.route('/survey')
+def survey():
+    return render_template('survey.html')
+
 
 def search_yelp(term, location):
     url = 'https://api.yelp.com/v3/businesses/search'
@@ -33,6 +54,7 @@ def search_yelp(term, location):
     print("Yelp API Response:", response_json)  # Debug log
     return response_json
 
+
 def calculate_distance_and_time(user_location, destination):
     url = 'https://maps.googleapis.com/maps/api/directions/json'
     params = {
@@ -52,9 +74,6 @@ def calculate_distance_and_time(user_location, destination):
         print(f"Error fetching directions: {data['status']}, {data.get('error_message', '')}")
         return None, None
 
-@app.route('/')
-def index():
-    return render_template('index.html', GOOGLE_MAPS_API_KEY=GOOGLE_MAPS_API_KEY)
 
 @app.route('/plan', methods=['POST'])
 def plan():
@@ -67,6 +86,7 @@ def plan():
     except Exception as e:
         print(f"Error: {e}")
         return "There was an error processing your request.", 500
+
 
 @app.route('/recommendations')
 def recommendations():
@@ -132,31 +152,3 @@ def survey_recommendation():
     recommended_activity = recommend_activity(weather, time_of_day, budget, environment, group_size, physicality_level)
     print("recommended_activity: " + recommended_activity)
     return redirect("/")  # NOT WORKING
-
-if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0', port=5000) #These are the new latest changes
-
-
-
-
-@app.route('/maps')
-def maps():
-    return render_template('maps.html')
-
-
-@app.route('/weather')
-def weather():
-    return render_template('weather.html')
-
-
-@app.route('/survey')
-def survey():
-    return render_template('survey.html')
-
-
-
-
-
-
-
-
