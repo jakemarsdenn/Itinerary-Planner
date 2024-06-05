@@ -3,7 +3,7 @@
   --smooth: 'Metropolis', sans-serif;
 }
 
-html, body {
+html {
   height: 100%;
   margin: 0;
   padding: 0;
@@ -23,6 +23,12 @@ h1 {
   color: black;
   font-family: var(--blocky);
   font-size: 40px;
+}
+
+h2 {
+  color: black;
+  font-family: var(--smooth);
+  font-size: 20px;
 }
 
 p {
@@ -45,11 +51,6 @@ p {
   margin-top: 200px;
   margin-left: 350px;
   margin-right: 350px;
-}
-
-.title-container {
-  text-align: center;
-  margin-bottom: 20px;
 }
 
 .form-container {
@@ -80,18 +81,6 @@ p {
   cursor: pointer;
 }
 
-
-#refresh-button {
-  margin-bottom: 30px !important; /* Latest changes */
-  padding: 20px 30px !important;
-  font-size: 20px !important;
-  background-color: #4CAF50 !important;
-  color: white !important;
-  border: none !important;
-  border-radius: 4px !important;
-  cursor: pointer !important;
-}
-
 .recommendations-list {
   list-style-type: none;
   padding: 0;
@@ -120,8 +109,15 @@ p {
 }
 
 .recommendation-details {
+  font-family: var(--smooth);
+  font-size: 16px;
   padding: 10px;
   text-align: center;
+}
+
+.rating,.eta,.distance {
+  font-family: var(--smooth);
+  font-size: 16px;
 }
 
 .recommendation-details h2 {
@@ -133,6 +129,7 @@ p {
 }
 
 .get-directions {
+  font-family: var(--smooth);
   padding: 5px 10px;
   font-size: 14px;
   cursor: pointer;
@@ -265,12 +262,13 @@ p {
 .directions-button,
 .recommendations-button,
 .delete-task-button {
+  font-family: var(--smooth);
   padding: 5px 10px;
   font-size: 14px;
   cursor: pointer;
   border: none;
   border-radius: 4px;
-  width: 130px;
+  width: 145px;
 }
 
 .directions-button,
@@ -280,13 +278,15 @@ p {
 }
 
 .delete-task-button {
-  background-color: red;
+  background-color: #e36262;
   color: white;
+  width: 65px;
 }
 
 .task-label,
 .location-label {
-  font-weight: bold;
+  font-family: var(--smooth);
+  font-weight: 500;
   font-size: 18px;
   margin-right: 5px;
   white-space: nowrap;
@@ -298,5 +298,11 @@ p {
   transition: opacity 1s ease-out;
 }
 
+.button-2 {
+  background-color: #ededed;
+  color: black;
+  border-radius: 4px;
+  border: none; 
+}
+/*Jake's version
 
-/*this is the new latest version^
