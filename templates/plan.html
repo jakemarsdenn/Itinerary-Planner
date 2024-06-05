@@ -15,60 +15,84 @@
 
             map = new google.maps.Map(document.getElementById('map'), {
                 zoom: 7,
-                center: { lat: 41.85, lng: -87.65 }
+                center: { lat: 34.052235, lng: -118.243683 } // Centered at Los Angeles
             });
 
             directionsRenderer.setMap(map);
 
-            document.querySelectorAll('.get-directions').forEach(button => {
-                button.addEventListener('click', () => {
-                    const lat = parseFloat(button.getAttribute('data-lat'));
-                    const lon = parseFloat(button.getAttribute('data-lon'));
-                    calculateAndDisplayRoute(lat, lon);
-                });
-            });
+            const origin = "Los Angeles City Hall, Los Angeles, CA, USA"; // Specify the origin
+            const placesToVisit = [
+                { address: "Griffith Observatory, Los Angeles, CA, USA", description: "The Griffith Observatory offers breathtaking views of the Los Angeles basin and the Hollywood Sign.", estimatedTime: "25 minutes" },
+                { address: "Santa Monica Pier, Santa Monica, CA, USA", description: "Santa Monica Pier is a historic pier with an amusement park, aquarium, and restaurants.", estimatedTime: "30 minutes" },
+                { address: "The Getty Center, Los Angeles, CA, USA", description: "The Getty Center is a renowned art museum featuring works from various periods and cultures.", estimatedTime: "35 minutes" },
+                { address: "Hollywood Walk of Fame, Hollywood, CA, USA", description: "The Hollywood Walk of Fame is an iconic landmark featuring the stars of famous celebrities.", estimatedTime: "20 minutes" },
+                { address: "Dodger Stadium, Los Angeles, CA, USA", description: "Dodger Stadium is a baseball park in the Elysian Park neighborhood of Los Angeles.", estimatedTime: "15 minutes" }
+            ];
+            calculateAndDisplayRoute(origin, placesToVisit);
         }
 
-        function calculateAndDisplayRoute(lat, lon) {
+        function calculateAndDisplayRoute(origin, placesToVisit) {
+            const waypoints = placesToVisit.map(place => ({ location: place.address, stopover: true }));
+
             directionsService.route(
                 {
-                    origin: 'Chicago, IL',
-                    destination: { lat: lat, lng: lon },
+                    origin: origin,
+                    destination: placesToVisit[placesToVisit.length - 1].address, // Set destination as the last place in the list
+                    waypoints: waypoints.slice(0, -1), // Remove the last waypoint as it's the final destination
+                    optimizeWaypoints: false, // Ensure the waypoints are in the specified order
                     travelMode: google.maps.TravelMode.DRIVING,
                 },
                 (response, status) => {
                     if (status === 'OK') {
                         directionsRenderer.setDirections(response);
+                        displayRouteInfo(placesToVisit, response.routes[0].legs);
                     } else {
                         alert('Directions request failed due to ' + status);
                     }
                 }
             );
+
+            // Add a marker for the origin with a black circle
+            new google.maps.Marker({
+                position: { lat: 34.0536909, lng: -118.242766 }, // Replace with actual coordinates of Los Angeles City Hall
+                map: map,
+                icon: {
+                    path: google.maps.SymbolPath.CIRCLE,
+                    scale: 8,
+                    fillColor: '#000000',
+                    fillOpacity: 1,
+                    strokeColor: '#000000',
+                    strokeOpacity: 1,
+                },
+                title: 'Starting Point',
+            });
+        }
+
+        function displayRouteInfo(placesToVisit, routeLegs) {
+            const routeInfoDiv = document.getElementById('route-info');
+            routeInfoDiv.innerHTML = "<h2>Route Information</h2>";
+
+            // Loop through routeLegs but start labels from A
+            routeLegs.forEach((leg, index) => {
+                const place = placesToVisit[index];
+                const description = place.description;
+                const estimatedTime = leg.duration.text;
+
+                // Labels start from 'A' for the first place in placesToVisit
+                const label = String.fromCharCode(65 + index +1); // ASCII code for A, B, C, ...
+
+                const info = `<p><strong>Location ${label}:</strong> ${description}</p>
+                              <p><strong>Estimated Travel Time:</strong> ${estimatedTime}</p>`;
+                routeInfoDiv.innerHTML += info;
+            });
         }
 
         window.onload = initMap;
     </script>
 </head>
 <body>
-    <h1>Plan for {{ task }}</h1>
-    <h2>Best Beaches</h2>
-    <ul>
-        {% for beach in beaches %}
-        <li>
-            {{ beach.name }} - {{ beach.rating }} stars
-            <button class="get-directions" data-lat="{{ beach.coordinates.latitude }}" data-lon="{{ beach.coordinates.longitude }}">Get Directions</button>
-        </li>
-        {% endfor %}
-    </ul>
-    <h2>Best Restaurants</h2>
-    <ul>
-        {% for restaurant in restaurants %}
-        <li>
-            {{ restaurant.name }} - {{ restaurant.rating }} stars
-            <button class="get-directions" data-lat="{{ restaurant.coordinates.latitude }}" data-lon="{{ restaurant.coordinates.longitude }}">Get Directions</button>
-        </li>
-        {% endfor %}
-    </ul>
-    <div id="map" style="height: 500px; width: 100%;"></div>
+    <h1>Plan for the Day</h1>
+    <div id="map" style="height: 500px; width: 60%; float: left;"></div>
+    <div id="route-info" style="width: 40%; float: right;"></div>
 </body>
 </html>
