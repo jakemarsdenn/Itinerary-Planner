@@ -7,9 +7,32 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
     <script src="https://maps.googleapis.com/maps/api/js?key={{ GOOGLE_MAPS_API_KEY }}&libraries=places&callback=initMap" async defer></script>
     <script>
+
         let map, directionsService, directionsRenderer;
 
-        function initMap() {
+    // function setUserFullName() {
+    //     var user = JSON.parse('{{ user | tojson | safe}}');
+    //     document.getElementById('username').innerHTML = user.firstname + " " + user.lastname;
+    // }
+
+
+    // function setTaskLocation() {
+    //     var tasks = JSON.parse('{{ tasks | tojson | safe}}');
+    //     var locations = JSON.parse('{{ locations | tojson | safe}}');
+
+    //     document.getElementById('tasks').innerHTML = tasks;
+    //     document.getElementById('locations').innerHTML = locations;
+       
+    // }
+
+    // // Wait for the DOM to load before setting the user's full name
+    // document.addEventListener('DOMContentLoaded', function() {
+    //     setUserFullName();
+    //     setTaskLocation();
+    // });
+
+
+        function initMap(tasks, locations) {
             directionsService = new google.maps.DirectionsService();
             directionsRenderer = new google.maps.DirectionsRenderer();
 
@@ -20,14 +43,35 @@
 
             directionsRenderer.setMap(map);
 
-            const origin = "Los Angeles City Hall, Los Angeles, CA, USA"; // Specify the origin
-            const placesToVisit = [
-                { address: "Griffith Observatory, Los Angeles, CA, USA", description: "The Griffith Observatory offers breathtaking views of the Los Angeles basin and the Hollywood Sign.", estimatedTime: "25 minutes" },
-                { address: "Santa Monica Pier, Santa Monica, CA, USA", description: "Santa Monica Pier is a historic pier with an amusement park, aquarium, and restaurants.", estimatedTime: "30 minutes" },
-                { address: "The Getty Center, Los Angeles, CA, USA", description: "The Getty Center is a renowned art museum featuring works from various periods and cultures.", estimatedTime: "35 minutes" },
-                { address: "Hollywood Walk of Fame, Hollywood, CA, USA", description: "The Hollywood Walk of Fame is an iconic landmark featuring the stars of famous celebrities.", estimatedTime: "20 minutes" },
-                { address: "Dodger Stadium, Los Angeles, CA, USA", description: "Dodger Stadium is a baseball park in the Elysian Park neighborhood of Los Angeles.", estimatedTime: "15 minutes" }
-            ];
+            const origin = "UCLA, Los Angeles, CA, USA"; // Specify the origin
+            
+            var tasks = JSON.parse('{{ tasks | tojson | safe}}');
+            var locations = JSON.parse('{{ locations | tojson | safe}}');
+
+            document.getElementById('tasks').innerHTML = tasks;
+            document.getElementById('locations').innerHTML = locations;
+
+            var placesToVisit = [];
+            for (let i = 0; i < tasks.length; i++) {
+                placesToVisit.push({ address: tasks[i] + ', ' + locations[i] });
+            }
+            // var placesToVisit = [
+            //     { address: "Griffith Observatory, Los Angeles" },
+            //     { address: "Santa Monica Pier, Santa Monica" },
+            //     { address: "The Getty Center, Los Angeles, CA, USA" },
+            //     { address: "Hollywood Walk of Fame, Hollywood, CA, USA" },
+            //     { address: "Dodger Stadium, Los Angeles, CA, USA" }
+            // ];
+
+            var placesToVisitHTML = '';
+            placesToVisit.forEach(place => {
+                placesToVisitHTML += '<p>' + place.address + '</p>';
+            });
+
+            // Set the innerHTML of the placesToVisit element
+            document.getElementById('placesToVisit').innerHTML = placesToVisitHTML;
+
+
             calculateAndDisplayRoute(origin, placesToVisit);
         }
 
@@ -53,19 +97,19 @@
             );
 
             // Add a marker for the origin with a black circle
-            new google.maps.Marker({
-                position: { lat: 34.0536909, lng: -118.242766 }, // Replace with actual coordinates of Los Angeles City Hall
-                map: map,
-                icon: {
-                    path: google.maps.SymbolPath.CIRCLE,
-                    scale: 8,
-                    fillColor: '#000000',
-                    fillOpacity: 1,
-                    strokeColor: '#000000',
-                    strokeOpacity: 1,
-                },
-                title: 'Starting Point',
-            });
+            // new google.maps.Marker({
+            //     position: { lat: 34.0536909, lng: -118.242766 }, // Replace with actual coordinates of Los Angeles City Hall
+            //     map: map,
+            //     icon: {
+            //         path: google.maps.SymbolPath.CIRCLE,
+            //         scale: 8,
+            //         fillColor: '#000000',
+            //         fillOpacity: 1,
+            //         strokeColor: '#000000',
+            //         strokeOpacity: 1,
+            //     },
+            //     title: 'Starting Point',
+            // });
         }
 
         function displayRouteInfo(placesToVisit, routeLegs) {
@@ -75,14 +119,9 @@
             // Loop through routeLegs but start labels from A
             routeLegs.forEach((leg, index) => {
                 const place = placesToVisit[index];
-                const description = place.description;
-                const estimatedTime = leg.duration.text;
+                const label = String.fromCharCode(65 + index + 1); // ASCII code for A, B, C, ...
 
-                // Labels start from 'A' for the first place in placesToVisit
-                const label = String.fromCharCode(65 + index +1); // ASCII code for A, B, C, ...
-
-                const info = `<p><strong>Location ${label}:</strong> ${description}</p>
-                              <p><strong>Estimated Travel Time:</strong> ${estimatedTime}</p>`;
+                const info = `<p><strong>Location ${label}: </strong>${place.address}</p>`;
                 routeInfoDiv.innerHTML += info;
             });
         }
@@ -94,5 +133,15 @@
     <h1>Plan for the Day</h1>
     <div id="map" style="height: 500px; width: 60%; float: left;"></div>
     <div id="route-info" style="width: 40%; float: right;"></div>
+    <div>
+        
+        <div id="tasks" style="display: none;"></div>
+        <div id="locations" style="display: none;"></div>
+        <div id="placesToVisit" style="display: none;"></div>
+        
+
+
+
+    </div>
 </body>
 </html>

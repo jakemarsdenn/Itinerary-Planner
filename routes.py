@@ -79,14 +79,19 @@ def calculate_distance_and_time(user_location, destination):
 @app.route('/plan', methods=['POST'])
 def plan():
     try:
-        task = request.form['task']
-        location = request.form['location']
-        beaches = search_yelp('beach', location)
-        restaurants = search_yelp('restaurant', location)
-        return render_template('plan.html', task=task, beaches=beaches['businesses'], restaurants=restaurants['businesses'], GOOGLE_MAPS_API_KEY=GOOGLE_MAPS_API_KEY)
+        tasks = request.form.getlist('task')  # Get all tasks from the form
+        locations = request.form.getlist('location')  # Get all locations from the form
+        
+        # this is useless but when i delete it, page stops working.. idk just leave it i guess
+        user = {'firstname': "Mr.", 'lastname': "My Father's Son"} 
+
+        print("tasks: ", tasks)
+        print("locations: ", locations)
+        return render_template('plan.html', tasks=tasks, locations=locations, user=user, GOOGLE_MAPS_API_KEY=GOOGLE_MAPS_API_KEY)
     except Exception as e:
         print(f"Error: {e}")
         return "There was an error processing your request.", 500
+
 
 
 @app.route('/recommendations')

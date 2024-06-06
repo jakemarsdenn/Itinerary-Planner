@@ -70,6 +70,31 @@ function deleteCheckbox() {
 }
 
 function addTask(task = '', location = '', checked = false) {
+    const formData = new FormData();
+    formData.append('task', task);
+    formData.append('location', location);
+
+    fetch('/plan', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => {
+        if (response.ok) {
+            return response.text();
+        }
+        throw new Error('Network response was not ok.');
+    })
+    .then(data => {
+        // Handle success
+        // Optionally, you can redirect or do something else
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
+
+    
+    // Rest of the function remains unchanged
+
     const taskContainer = document.getElementById('tasks-container');
     const taskEntry = document.createElement('div');
     taskEntry.classList.add('task-entry');
