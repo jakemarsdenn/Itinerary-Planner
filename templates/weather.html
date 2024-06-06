@@ -3,17 +3,56 @@
 {% block title %}Weather{% endblock %}
 
 {% block content %}
-    <div class="full-container">
-        <div class="left-container">
-            <h1>Weather</h1>
-        </div>
+    <div class="container">
+        <h1 style="margin-top:180px;">Weather</h1>
+        <form id="locationForm">
+            <label for="zip">Enter ZIP Code:</label>
+            <input type="text" id="zip" name="zip" required>
+            <button type="submit">Get Weather</button>
+        </form>
+        <div id="weatherInfo" class="weather-info"></div>
     </div>
+
+    <script>
+        document.getElementById('locationForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const zip = document.getElementById('zip').value;
+
+            fetch('/weather', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ zip: zip })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    displayWeather(data);
+                })
+                .catch(error => console.error('Error fetching weather data:', error));
+        });
+
+        function displayWeather(data) {
+            const weatherInfo = document.getElementById('weatherInfo');
+
+            const temp = kelvinToFahrenheit(data.main.temp);
+            const tempMin = kelvinToFahrenheit(data.main.temp_min);
+            const tempMax = kelvinToFahrenheit(data.main.temp_max);
+
+            weatherInfo.innerHTML = `
+                <h2>Weather in ${data.name}</h2>
+                <p><strong>Main:</strong> ${data.weather[0].main}</p>
+                <p><strong>Description:</strong> ${data.weather[0].description}</p>
+                <p><strong>Temperature:</strong> ${temp} °F</p>
+                <p><strong>Min Temperature:</strong> ${tempMin} °F</p>
+                <p><strong>Max Temperature:</strong> ${tempMax} °F</p>
+                <p><strong>Humidity:</strong> ${data.main.humidity} %</p>
+                <p><strong>Wind Speed:</strong> ${data.wind.speed} m/s</p>
+            `;
+        }
+
+        function kelvinToFahrenheit(kelvin) {
+            return ((kelvin - 273.15) * 9/5 + 32).toFixed(2);
+        }
+    </script>
 {% endblock %}
-
-
-
-
-
-
-
-

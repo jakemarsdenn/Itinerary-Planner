@@ -10,6 +10,7 @@ app.secret_key = 'secret_key'
 
 YELP_API_KEY = '-xzPL1litWa31uPPsXYBUtvqKZFgMwA2sUdnAZfp_Wd2gj8UsrXiGYdYbPzHFv8BYMYw0Dam6eJpuj3hntP36joOQNIxzu0xJcCvDDllGHkZ77rSj-lQpr-CqO1MZnYx'
 GOOGLE_MAPS_API_KEY = 'AIzaSyAZJwxQoA5o9KxSNlmzFkK7qrw3b-5pehk'
+WEATHER_API_KEY = '8edd014dc7b978cb33195c8a32879e51'
 
 
 @app.route('/')
@@ -151,4 +152,14 @@ def survey_recommendation():
     physicality_level = request.form.get('physicality-preference')
     recommended_activity = recommend_activity(weather, time_of_day, budget, environment, group_size, physicality_level)
     print("recommended_activity: " + recommended_activity)
-    return redirect("/")  # NOT WORKING
+    return redirect("/")
+
+
+@app.route('/weather', methods=['POST'])
+def get_weather():
+    data = request.get_json()
+    zip = data.get('zip')
+    api_url = f'https://api.openweathermap.org/data/2.5/weather?zip={zip},us&appid={WEATHER_API_KEY}'
+    response = requests.get(api_url)
+    weather_data = response.json()
+    return jsonify(weather_data)
