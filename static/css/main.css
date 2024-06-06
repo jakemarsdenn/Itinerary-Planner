@@ -115,7 +115,7 @@ p {
   text-align: center;
 }
 
-.rating,.eta,.distance {
+.rating, .eta, .distance {
   font-family: var(--smooth);
   font-size: 16px;
 }
@@ -148,10 +148,27 @@ p {
 
 .task-entry {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: 5px;
-  margin-bottom: 5px;
+  margin-bottom: 10px;
   width: 100%;
+}
+
+.additional-info {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  width: 100%;
+}
+
+.additional-info .user-label-input {
+  font-size: 12px;
+  padding: 2px 4px;
+}
+
+.additional-info label {
+  font-size: 12px;
 }
 
 .user-label-input {
@@ -284,7 +301,9 @@ p {
 }
 
 .task-label,
-.location-label {
+.location-label,
+.place-label,
+.address-label {
   font-family: var(--smooth);
   font-weight: 500;
   font-size: 18px;
@@ -302,7 +321,33 @@ p {
   background-color: #ededed;
   color: black;
   border-radius: 4px;
-  border: none; 
+  border: none;
 }
-/*Jake's version
 
+.selected-place-container {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  flex: 1;
+}
+
+.selected-place-container label {
+  font-size: 14px; /* Make the label font smaller */
+}
+
+.selected-place-container input {
+  font-size: 14px; /* Make the input font smaller */
+  flex: 1;
+}
+
+.task-location-container {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 10px;
+  align-items: center;
+  width: 100%;
+}
+
+.task-location-container .user-label-input {
+  flex: 1;
+} /* Final working version

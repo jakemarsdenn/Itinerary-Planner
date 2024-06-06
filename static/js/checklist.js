@@ -1,10 +1,7 @@
 document.addEventListener('DOMContentLoaded', function() {
-    try {
-        initChecklist();
-        loadTasksFromLocalStorage();
-    } catch (error) {
-        console.error('Initialization error:', error);
-    }
+    initChecklist();
+    loadTasksFromLocalStorage();
+    addSelectPlaceListeners();
 });
 
 function initChecklist() {
@@ -70,6 +67,7 @@ function deleteCheckbox() {
 }
 
 function addTask(task = '', location = '', checked = false) {
+    console.log(`addTask called with - Task: ${task}, Location: ${location}`);
     const formData = new FormData();
     formData.append('task', task);
     formData.append('location', location);
@@ -86,26 +84,24 @@ function addTask(task = '', location = '', checked = false) {
     })
     .then(data => {
         // Handle success
-        // Optionally, you can redirect or do something else
     })
     .catch(error => {
         console.error('Error:', error);
     });
 
-    
-    // Rest of the function remains unchanged
-
     const taskContainer = document.getElementById('tasks-container');
     const taskEntry = document.createElement('div');
     taskEntry.classList.add('task-entry');
     taskEntry.innerHTML = `
-        <input type="checkbox" class="task-checkbox" ${checked ? 'checked' : ''}>
-        <label class="task-label">Task:</label>
-        <input type="text" class="user-label-input" placeholder="Task" name="task" value="${task}" required />
-        <label class="location-label">Location:</label>
-        <input type="text" class="user-label-input" placeholder="Location" name="location" value="${location}" required />
-        <button type="button" class="recommendations-button">Recommendations</button>
-        <button type="button" class="delete-task-button">Delete</button>
+        <div class="task-location-container">
+            <input type="checkbox" class="task-checkbox" ${checked ? 'checked' : ''}>
+            <label class="task-label">Task:</label>
+            <input type="text" class="user-label-input" placeholder="Task" name="task" value="${task}" required />
+            <label class="location-label">Location:</label>
+            <input type="text" class="user-label-input" placeholder="Location" name="location" value="${location}" required />
+            <button type="button" class="recommendations-button">Recommendations</button>
+            <button type="button" class="delete-task-button">Delete</button>
+        </div>
     `;
 
     taskContainer.appendChild(taskEntry);
@@ -161,10 +157,41 @@ function loadTasksFromLocalStorage() {
     savedTasks.forEach(task => addTask(task.task, task.location, task.checked));
 }
 
+function addSelectPlaceListeners() {
+    document.querySelectorAll('.select-place').forEach(button => {
+        button.addEventListener('click', function(event) {
+            const selectedPlaceName = event.target.getAttribute('data-name');
+            const selectedPlaceAddress = event.target.getAttribute('data-address');
+            console.log(`Selected Place: ${selectedPlaceName}, Address: ${selectedPlaceAddress}`);  // Debugging log
+
+            const formData = new FormData();
+            formData.append('selected_place_name', selectedPlaceName);
+            formData.append('selected_place_address', selectedPlaceAddress);
+            
+            fetch('/select_place', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => {
+                if (response.ok) {
+                    return response.text();
+                }
+                throw new Error('Network response was not ok.');
+            })
+            .then(data => {
+                // handle successful selection if needed
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        });
+    });
+}
+
 window.onload = function() {
     loadTasksFromLocalStorage();
 };
 
 window.onbeforeunload = function() {
     saveTasksToLocalStorage();
-};
+};//Final working change

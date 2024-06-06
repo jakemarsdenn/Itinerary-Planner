@@ -3,230 +3,256 @@
 {% block title %}Recommendations{% endblock %}
 
 {% block content %}
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css', version='1.0') }}">
-    <script src="https://maps.googleapis.com/maps/api/js?key={{ GOOGLE_MAPS_API_KEY }}&libraries=places,directions&callback=initMap" async defer></script>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/main.css', version='1.0') }}">
+<script src="https://maps.googleapis.com/maps/api/js?key={{ GOOGLE_MAPS_API_KEY }}&libraries=places,directions&callback=initMap" async defer></script>
 
-    <style>
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 1;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            overflow: auto;
-            background-color: rgb(0,0,0);
-            background-color: rgba(0,0,0,0.4);
-            padding-top: 60px;
-        }
-        .modal-content {
-            background-color: #fefefe;
-            margin: 5% auto;
-            padding: 20px;
-            border: 1px solid #888;
-            width: 80%;
-        }
-        .close {
-            color: #aaa;
-            float: right;
-            font-size: 28px;
-            font-weight: bold;
-        }
-        .close:hover,
-        .close:focus {
-            color: black;
-            text-decoration: none;
-            cursor: pointer;
-        }
-        #map {
-            height: 500px;
-            width: 100%;
-        }
-    </style>
+<script async defer>
+    (g => {
+        var h, a, k, p = "The Google Maps JavaScript API", c = "google", l = "importLibrary", q = "__ib__", m = document, b = window;
+        b = b[c] || (b[c] = {});
+        var d = b.maps || (b.maps = {}), r = new Set, e = new URLSearchParams, u = () => h || (h = new Promise(async (f, n) => {
+            await (a = m.createElement("script"));
+            e.set("libraries", [...r] + "");
+            for (k in g) e.set(k.replace(/[A-Z]/g, t => "_" + t[0].toLowerCase()), g[k]);
+            e.set("callback", c + ".maps." + q);
+            a.src = `https://maps.${c}apis.com/maps/api/js?` + e;
+            d[q] = f;
+            a.onerror = () => h = n(Error(p + " could not load."));
+            a.nonce = m.querySelector("script[nonce]")?.nonce || "";
+            m.head.append(a);
+        }));
+        d[l] ? console.warn(p + " only loads once. Ignoring:", g) : d[l] = (f, ...n) => r.add(f) && u().then(() => d[l](f, ...n))
+    })({
+        key: "{{ GOOGLE_MAPS_API_KEY }}",
+        v: "weekly",
+    });
+</script>
+<style>
+    .modal {
+        display: none;
+        position: fixed;
+        z-index: 1;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgb(0,0,0);
+        background-color: rgba(0,0,0,0.4);
+        padding-top: 60px;
+    }
+    .modal-content {
+        background-color: #fefefe;
+        margin: 5% auto;
+        padding: 20px;
+        border: 1px solid #888;
+        width: 80%;
+    }
+    .close {
+        color: #aaa;
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
+    }
+    .close:hover,
+    .close:focus {
+        color: black;
+        text-decoration: none;
+        cursor: pointer;
+    }
+    #map {
+        height: 500px;
+        width: 100%;
+    }
+</style>
 
-    <h1 style="margin-top:100px;">{{ task.title() }} Recommendations</h1>
-    <button id="refresh-button" class="refresh-button">Refresh Recommendations</button>
-    <ul id="recommendations-list" class="recommendations-list">
-        {% for recommendation in recommendations %}
-        <li class="recommendation-item" data-lat="{{ recommendation.coordinates.latitude }}" data-lon="{{ recommendation.coordinates.longitude }}">
-            <img src="{{ recommendation.image_url }}" alt="{{ recommendation.name }}" class="recommendation-image">
-            <div class="recommendation-details">
-                <h2>{{ recommendation.name }}</h2>
-                <p>{{ recommendation.rating }} stars</p>
-                <p class="eta">ETA: {{ recommendation.duration }}</p>
-                <p class="distance">Distance: {{ recommendation.distance }}</p>
-                <button class="get-directions" data-lat="{{ recommendation.coordinates.latitude }}" data-lon="{{ recommendation.coordinates.longitude }}">Get Directions</button>
-            </div>
-        </li>
-        {% endfor %}
-    </ul>
-
-    <input type="hidden" id="location" value="{{ location }}">
-    <script>
-        console.log("Initial location value:", "{{ location }}");
-    </script>
-
-    <div id="myModal" class="modal">
-        <div class="modal-content">
-            <span class="close">&times;</span>
-            <div id="map"></div>
+<h1>Recommendations for {{ task }}</h1>
+<button id="refresh-button" class="refresh-button">Refresh Recommendations</button>
+<ul id="recommendations-list" class="recommendations-list">
+    {% for recommendation in recommendations %}
+    <li class="recommendation-item" data-lat="{{ recommendation.coordinates.latitude }}" data-lon="{{ recommendation.coordinates.longitude }}">
+        <img src="{{ recommendation.image_url }}" alt="{{ recommendation.name }}" class="recommendation-image">
+        <div class="recommendation-details">
+            <h2>{{ recommendation.name }}</h2>
+            <p>{{ recommendation.rating }} stars</p>
+            <p class="eta">ETA: {{ recommendation.duration }}</p>
+            <p class="distance">Distance: {{ recommendation.distance }}</p>
+            <button class="select-place" data-name="{{ recommendation.name }}" data-address="{{ recommendation.location.address1 }}">Select Place</button>
+            <button class="get-directions" data-lat="{{ recommendation.coordinates.latitude }}" data-lon="{{ recommendation.coordinates.longitude }}">Get Directions</button>
         </div>
+    </li>
+    {% endfor %}
+</ul>
+
+<form id="select-place-form" method="POST" action="{{ url_for('select_place') }}">
+    <input type="hidden" id="selected-place-name" name="selected_place_name">
+    <input type="hidden" id="selected-place-address" name="selected_place_address">
+</form>
+
+<input type="hidden" id="location" value="{{ location }}">
+<script>
+    console.log("Initial location value:", "{{ location }}");
+</script>
+
+<div id="myModal" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <div id="map"></div>
     </div>
+</div>
+<script>
+    async function initMap() {
+        const { Map } = await google.maps.importLibrary("maps");
+        const { DirectionsService, DirectionsRenderer } = await google.maps.importLibrary("routes");
 
-    <script>
-        async function initMap() {
-            const { Map } = await google.maps.importLibrary("maps");
-            const { DirectionsService, DirectionsRenderer } = await google.maps.importLibrary("routes");
+        directionsService = new DirectionsService();
+        directionsRenderer = new DirectionsRenderer();
 
-            directionsService = new DirectionsService();
-            directionsRenderer = new DirectionsRenderer();
+        map = new Map(document.getElementById('map'), {
+            zoom: 7,
+            center: { lat: 41.85, lng: -87.65 }
+        });
 
-            map = new Map(document.getElementById('map'), {
-                zoom: 7,
-                center: { lat: 41.85, lng: -87.65 }
+        directionsRenderer.setMap(map);
+
+        document.querySelectorAll('.get-directions').forEach(button => {
+            button.addEventListener('click', () => {
+                const lat = button.getAttribute('data-lat');
+                const lon = button.getAttribute('data-lon');
+                openModal();
+                calculateAndDisplayRoute(lat, lon);
             });
+        });
 
-            directionsRenderer.setMap(map);
-
-            document.querySelectorAll('.get-directions').forEach(button => {
-                button.addEventListener('click', () => {
-                    const lat = button.getAttribute('data-lat');
-                    const lon = button.getAttribute('data-lon');
-                    openModal();
-                    calculateAndDisplayRoute(lat, lon);
-                });
+        document.querySelectorAll('.select-place').forEach(button => {
+            button.addEventListener('click', () => {
+                const placeName = button.getAttribute('data-name');
+                const placeAddress = button.getAttribute('data-address');
+                console.log('Selected Place:', placeName);  // Debugging log
+                console.log('Selected Place:', placeName, placeAddress);  // Debugging log
+                document.getElementById('selected-place-name').value = placeName;
+                document.getElementById('selected-place-address').value = placeAddress;
+                document.getElementById('select-place-form').submit();
             });
+        });
+    }
+
+    function openModal() {
+        const modal = document.getElementById("myModal");
+        const closeBtn = modal.querySelector(".close");
+
+        modal.style.display = "block";
+
+        closeBtn.onclick = function() {
+            modal.style.display = "none";
         }
 
-        function openModal() {
-            const modal = document.getElementById("myModal");
-            const closeBtn = modal.querySelector(".close");
-
-            modal.style.display = "block";
-
-            closeBtn.onclick = function() {
+        window.onclick = function(event) {
+            if (event.target == modal) {
                 modal.style.display = "none";
             }
+        }
+    }
 
-            window.onclick = function(event) {
-                if (event.target == modal) {
-                    modal.style.display = "none";
-                }
+    function calculateAndDisplayRoute(lat, lon) {
+        const directionsRequest = {
+            origin: new google.maps.LatLng({ lat: 33.9416, lng: -118.4085 }), // Example user location
+            destination: new google.maps.LatLng({ lat: parseFloat(lat), lng: parseFloat(lon) }),
+            travelMode: google.maps.TravelMode.DRIVING
+        };
+
+        directionsService.route(directionsRequest, (result, status) => {
+            if (status == 'OK') {
+                directionsRenderer.setDirections(result);
+            } else {
+                console.error('Directions request failed due to ' + status);
             }
-        }
+        });
+    }
 
-        function calculateAndDisplayRoute(lat, lon) {
-            const directionsRequest = {
-                origin: new google.maps.LatLng({ lat: 33.9416, lng: -118.4085 }), // Example user location
-                destination: new google.maps.LatLng({ lat: parseFloat(lat), lng: parseFloat(lon) }),
-                travelMode: google.maps.TravelMode.DRIVING
-            };
-
-            directionsService.route(directionsRequest, (result, status) => {
-                if (status == 'OK') {
-                    directionsRenderer.setDirections(result);
-                } else {
-                    console.error('Directions request failed due to ' + status);
+    document.getElementById('refresh-button').addEventListener('click', function() {
+        const task = "{{ task }}";
+        const location = document.getElementById('location').value;
+        console.log("Refresh task:", task);
+        console.log("Refresh location:", location);
+        fetch(`/refresh_recommendations?task=${task}&location=${encodeURIComponent(location)}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    throw new Error(data.error);
                 }
+                console.log("Fetched recommendations:", data.recommendations);
+                updateRecommendationsList(data.recommendations);
+            })
+            .catch(error => console.error('Error refreshing recommendations:', error));
+    });
+
+    function updateRecommendationsList(recommendations) {
+        const recommendationsList = document.getElementById('recommendations-list');
+        recommendationsList.innerHTML = '';
+        recommendations.forEach(recommendation => {
+            console.log("Adding recommendation:", recommendation.name);
+            const item = document.createElement('li');
+            item.className = 'recommendation-item';
+            item.setAttribute('data-lat', recommendation.coordinates.latitude);
+            item.setAttribute('data-lon', recommendation.coordinates.longitude);
+
+            const img = document.createElement('img');
+            img.src = recommendation.image_url;
+            img.alt = recommendation.name;
+            img.className = 'recommendation-image';
+
+            const details = document.createElement('div');
+            details.className = 'recommendation-details';
+
+            const name = document.createElement('h2');
+            name.textContent = recommendation.name;
+
+            const rating = document.createElement('p');
+            rating.textContent = `${recommendation.rating} stars`;
+
+            const eta = document.createElement('p');
+            eta.className = 'eta';
+            eta.textContent = `ETA: ${recommendation.duration}`;
+
+            const distance = document.createElement('p');
+            distance.className = 'distance';
+            distance.textContent = `Distance: ${recommendation.distance}`;
+
+            const getDirectionsButton = document.createElement('button');
+            getDirectionsButton.className = 'get-directions';
+            getDirectionsButton.setAttribute('data-lat', recommendation.coordinates.latitude);
+            getDirectionsButton.setAttribute('data-lon', recommendation.coordinates.longitude);
+            getDirectionsButton.textContent = 'Get Directions';
+            getDirectionsButton.addEventListener('click', () => {
+                openModal();
+                calculateAndDisplayRoute(recommendation.coordinates.latitude, recommendation.coordinates.longitude);
             });
-        }
 
-        document.getElementById('refresh-button').addEventListener('click', function() {
-            const task = "{{ task }}";
-            const location = document.getElementById('location').value;
-            console.log("Refresh task:", task);
-            console.log("Refresh location:", location);
-            fetch(`/refresh_recommendations?task=${task}&location=${encodeURIComponent(location)}`)
-                .then(response => response.json())
-                .then(data => {
-                    if (data.error) {
-                        throw new Error(data.error);
-                    }
-                    console.log("Fetched recommendations:", data.recommendations);
-                    updateRecommendationsList(data.recommendations);
-                })
-                .catch(error => console.error('Error refreshing recommendations:', error));
-        });
-
-        function updateRecommendationsList(recommendations) {
-            const recommendationsList = document.getElementById('recommendations-list');
-            recommendationsList.innerHTML = '';
-            recommendations.forEach(recommendation => {
-                console.log("Adding recommendation:", recommendation.name);
-                const item = document.createElement('li');
-                item.className = 'recommendation-item';
-                item.setAttribute('data-lat', recommendation.coordinates.latitude);
-                item.setAttribute('data-lon', recommendation.coordinates.longitude);
-
-                const img = document.createElement('img');
-                img.src = recommendation.image_url;
-                img.alt = recommendation.name;
-                img.className = 'recommendation-image';
-
-                const details = document.createElement('div');
-                details.className = 'recommendation-details';
-
-                const name = document.createElement('h2');
-                name.textContent = recommendation.name;
-
-                const rating = document.createElement('p');
-                rating.textContent = `${recommendation.rating} stars`;
-
-                const eta = document.createElement('p');
-                eta.className = 'eta';
-                eta.textContent = `ETA: ${recommendation.duration}`;
-
-                const distance = document.createElement('p');
-                distance.className = 'distance';
-                distance.textContent = `Distance: ${recommendation.distance}`;
-
-                const button = document.createElement('button');
-                button.className = 'get-directions';
-                button.setAttribute('data-lat', recommendation.coordinates.latitude);
-                button.setAttribute('data-lon', recommendation.coordinates.longitude);
-                button.textContent = 'Get Directions';
-                button.addEventListener('click', () => {
-                    openModal();
-                    calculateAndDisplayRoute(recommendation.coordinates.latitude, recommendation.coordinates.longitude);
-                });
-
-                details.appendChild(name);
-                details.appendChild(rating);
-                details.appendChild(eta);
-                details.appendChild(distance);
-                details.appendChild(button);
-
-                item.appendChild(img);
-                item.appendChild(details);
-                recommendationsList.appendChild(item);
+            const selectPlaceButton = document.createElement('button');
+            selectPlaceButton.className = 'select-place';
+            selectPlaceButton.setAttribute('data-name', recommendation.name);
+            selectPlaceButton.setAttribute('data-address', recommendation.location.address1);
+            selectPlaceButton.textContent = 'Select Place';
+            selectPlaceButton.addEventListener('click', () => {
+                document.getElementById('selected-place-name').value = recommendation.name;
+                document.getElementById('selected-place-address').value = recommendation.location.address1;
+                document.getElementById('select-place-form').submit();
             });
-        }
 
-        document.addEventListener('DOMContentLoaded', initMap);// These are the new latest changes
-    </script>
+            details.appendChild(name);
+            details.appendChild(rating);
+            details.appendChild(eta);
+            details.appendChild(distance);
+            details.appendChild(getDirectionsButton);
+            details.appendChild(selectPlaceButton);
 
-    <script async defer>
-        (g => {
-            var h, a, k, p = "The Google Maps JavaScript API", c = "google", l = "importLibrary", q = "__ib__", m = document, b = window;
-            b = b[c] || (b[c] = {});
-            var d = b.maps || (b.maps = {}), r = new Set, e = new URLSearchParams, u = () => h || (h = new Promise(async (f, n) => {
-                await (a = m.createElement("script"));
-                e.set("libraries", [...r] + "");
-                for (k in g) e.set(k.replace(/[A-Z]/g, t => "_" + t[0].toLowerCase()), g[k]);
-                e.set("callback", c + ".maps." + q);
-                a.src = `https://maps.${c}apis.com/maps/api/js?` + e;
-                d[q] = f;
-                a.onerror = () => h = n(Error(p + " could not load."));
-                a.nonce = m.querySelector("script[nonce]")?.nonce || "";
-                m.head.append(a);
-            }));
-            d[l] ? console.warn(p + " only loads once. Ignoring:", g) : d[l] = (f, ...n) => r.add(f) && u().then(() => d[l](f, ...n))
-        })({
-            key: "{{ GOOGLE_MAPS_API_KEY }}",
-            v: "weekly",
+            item.appendChild(img);
+            item.appendChild(details);
+            recommendationsList.appendChild(item);
         });
-    </script>
+    }
 
-
+    document.addEventListener('DOMContentLoaded', initMap); //Final working change
+</script>
 {% endblock %}

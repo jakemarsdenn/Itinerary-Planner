@@ -1,37 +1,26 @@
 import random
-from flask import Flask, render_template, request, redirect, url_for, jsonify
-from model import recommend_activity
+from flask import Flask, render_template, request, redirect, url_for, jsonify, session
 import requests
-
 
 app = Flask(__name__)
 app.secret_key = 'secret_key'
-
 
 YELP_API_KEY = '-xzPL1litWa31uPPsXYBUtvqKZFgMwA2sUdnAZfp_Wd2gj8UsrXiGYdYbPzHFv8BYMYw0Dam6eJpuj3hntP36joOQNIxzu0xJcCvDDllGHkZ77rSj-lQpr-CqO1MZnYx'
 GOOGLE_MAPS_API_KEY = 'AIzaSyAZJwxQoA5o9KxSNlmzFkK7qrw3b-5pehk'
 WEATHER_API_KEY = '8edd014dc7b978cb33195c8a32879e51'
 
 
-@app.route('/')
-def index():
-    return render_template('index.html', GOOGLE_MAPS_API_KEY=GOOGLE_MAPS_API_KEY)
-
-
 @app.route('/maps')
 def maps():
     return render_template('maps.html')
-
 
 @app.route('/weather')
 def weather():
     return render_template('weather.html')
 
-
 @app.route('/survey')
 def survey():
     return render_template('survey.html')
-
 
 def search_yelp(term, location):
     url = 'https://api.yelp.com/v3/businesses/search'
@@ -55,7 +44,6 @@ def search_yelp(term, location):
     print("Yelp API Response:", response_json)  # Debug log
     return response_json
 
-
 def calculate_distance_and_time(user_location, destination):
     url = 'https://maps.googleapis.com/maps/api/directions/json'
     params = {
@@ -75,7 +63,6 @@ def calculate_distance_and_time(user_location, destination):
         print(f"Error fetching directions: {data['status']}, {data.get('error_message', '')}")
         return None, None
 
-
 @app.route('/plan', methods=['POST'])
 def plan():
     try:
@@ -91,8 +78,6 @@ def plan():
     except Exception as e:
         print(f"Error: {e}")
         return "There was an error processing your request.", 500
-
-
 
 @app.route('/recommendations')
 def recommendations():
@@ -120,7 +105,6 @@ def recommendations():
         print(f"Error: {e}")
         return "There was an error processing your request.", 500
 
-
 @app.route('/refresh_recommendations')
 def refresh_recommendations():
     task = request.args.get('task')
@@ -146,7 +130,6 @@ def refresh_recommendations():
         print(f"Error: {e}")
         return jsonify({'error': 'There was an error processing your request.'}), 500
 
-
 @app.route('/submit-survey', methods=['POST'])
 def survey_recommendation():
     weather = request.form.get('weather-preference')
@@ -159,7 +142,6 @@ def survey_recommendation():
     print("recommended_activity: " + recommended_activity)
     return redirect("/")
 
-
 @app.route('/weather', methods=['POST'])
 def get_weather():
     data = request.get_json()
@@ -168,3 +150,23 @@ def get_weather():
     response = requests.get(api_url)
     weather_data = response.json()
     return jsonify(weather_data)
+
+@app.route('/select_place', methods=['POST'])
+def select_place():
+    selected_place_name = request.form['selected_place_name']
+    selected_place_address = request.form['selected_place_address']
+    session['selected_place_name'] = selected_place_name
+    session['selected_place_address'] = selected_place_address
+    print(f"Selected Place Name: {selected_place_name}, Selected Place Address: {selected_place_address}")  # Debugging log
+    return redirect(url_for('index'))
+
+
+@app.route('/')
+def index():
+    selected_place_name = session.get('selected_place_name', '')
+    selected_place_address = session.get('selected_place_address', '')
+    print(f'Index Route - Selected Place: {selected_place_name}, Address: {selected_place_address}')  # Debugging log
+    return render_template('index.html', GOOGLE_MAPS_API_KEY=GOOGLE_MAPS_API_KEY, selected_place_name=selected_place_name, selected_place_address=selected_place_address)
+
+if __name__ == '__main__':
+    app.run(debug=True, host='0.0.0.0', port=5000) #Final working chnage

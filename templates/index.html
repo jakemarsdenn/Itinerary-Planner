@@ -5,32 +5,43 @@
 {% endblock %}
 
 {% block content %}
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/checklist.css', version='1.0') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/title.css', version='1.0') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css', version='1.0') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/header.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/title.css', version='1.0') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/main.css', version='1.0') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/header.css') }}">
 
-    <div class="title-container">
-        <div id="title">Itinerary Planner</div>
-        <p id="date"></p>
+<div class="title-container">
+    <div id="title">Itinerary Planner</div>
+    <p id="date"></p>
+</div>
+
+<div class="form-container">
+    <div class="checklist-container">
+        <!-- Checkboxes will be dynamically added here -->
     </div>
-    
-    <div class="form-container">
-        <div class="checklist-container">
-            <!-- Checkboxes will be dynamically added here -->
-        </div>
-        <form id="tasks-form" method="POST" action="{{ url_for('plan') }}">
-            <div id="tasks-container"></div>
-            <div class="button-container">
-                <button class="button-2" type="button" onclick="addTask()">Add Task</button>
-                <button class="button-2" type="submit">Plan Tasks</button>
+    <form id="tasks-form" method="POST" action="{{ url_for('plan') }}">
+        <div id="tasks-container">
+            <!-- Existing task and location input fields -->
+            <div class="task-location-container">
+                <div class="task">
+                    <label>Task:</label>
+                    <input type="text" name="task" value="Dinner" readonly>
+                </div>
+                <div class="location">
+                    <label>Location:</label>
+                    <input type="text" name="location" value="Los Angeles" readonly>
+                </div>
+                <button type="button" class="recommendations-button">Recommendations</button>
+                <button type="button" class="delete-task-button">Delete</button>
             </div>
-        </form>
-    </div>
-    
-    <script src="{{ url_for('static', filename='js/checklist.js', version='1.0') }}" defer></script>
-    <script src="{{ url_for('static', filename='js/memento.js', version='1.0') }}" defer></script>
-    <script src="{{ url_for('static', filename='js/title.js', version='1.0') }}" defer></script>
-{% endblock %}
+        </div>
+        <div class="button-container">
+            <button class="button-2" type="button" onclick="addTask()">Add Task</button>
+            <button class="button-2" type="submit">Plan Tasks</button>
+        </div>
+    </form>
+</div>
 
-<!-- This is the latest change ^-->
+<script src="{{ url_for('static', filename='js/checklist.js', version='1.0') }}" defer></script>
+<script src="{{ url_for('static', filename='js/memento.js', version='1.0') }}" defer></script>
+<script src="{{ url_for('static', filename='js/title.js', version='1.0') }}" defer></script>
+{% endblock %} <!-- Final working change-->
