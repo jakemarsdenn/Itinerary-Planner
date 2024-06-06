@@ -1,10 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Plan</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+{% extends "base.html" %}
+
+{% block title %}Survey{% endblock %}
+
+{% block content %}
     <script src="https://maps.googleapis.com/maps/api/js?key={{ GOOGLE_MAPS_API_KEY }}&libraries=places&callback=initMap" async defer></script>
     <script>
 
@@ -128,20 +126,13 @@
 
         window.onload = initMap;
     </script>
-</head>
-<body>
-    <h1>Plan for the Day</h1>
+
+    <h1 style="margin-top:130px;">Plan for the Day</h1>
     <div id="map" style="height: 500px; width: 60%; float: left;"></div>
     <div id="route-info" style="width: 40%; float: right;"></div>
     <div>
-        
         <div id="tasks" style="display: none;"></div>
         <div id="locations" style="display: none;"></div>
         <div id="placesToVisit" style="display: none;"></div>
-        
-
-
-
     </div>
-</body>
-</html>
+{% endblock %}
