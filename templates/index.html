@@ -14,7 +14,7 @@
         <div id="title">Itinerary Planner</div>
         <p id="date"></p>
     </div>
-    
+
     <div class="form-container">
         <div class="checklist-container">
             <!-- Checkboxes will be dynamically added here -->
@@ -27,10 +27,33 @@
             </div>
         </form>
     </div>
-    
+
     <script src="{{ url_for('static', filename='js/checklist.js', version='1.0') }}" defer></script>
     <script src="{{ url_for('static', filename='js/memento.js', version='1.0') }}" defer></script>
     <script src="{{ url_for('static', filename='js/title.js', version='1.0') }}" defer></script>
-{% endblock %}
 
-<!-- This is the latest change ^-->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            try {
+                initChecklist();
+                loadTasksFromLocalStorage();
+
+                {% if session.recommended_activity %}
+                    addTask("{{ session.recommended_activity }}");
+
+                    fetch("{{ url_for('clear_recommended_activity') }}", { method: 'POST' })
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error('Network response was not ok');
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                        });
+                {% endif %}
+            } catch (error) {
+                console.error('Initialization error:', error);
+            }
+        });
+    </script>
+{% endblock %}

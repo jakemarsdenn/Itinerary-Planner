@@ -40,24 +40,22 @@ function createCheckbox(checked = false, label = '') {
     newLabelInput.focus();
     newLabelInput.setSelectionRange(newLabelInput.value.length, newLabelInput.value.length);
 
-    // Add event listener for delete button
     newCheckboxWrapper.querySelector('.delete-task-button').addEventListener('click', function() {
         newCheckboxWrapper.remove();
-        saveTasksToLocalStorage(); // Save tasks after deletion
+        saveTasksToLocalStorage();
     });
 
-    // Add event listener for task checkbox
     newCheckboxWrapper.querySelector('.inp-cbx').addEventListener('change', function() {
         if (this.checked) {
             newCheckboxWrapper.classList.add('completed');
             setTimeout(() => {
                 newCheckboxWrapper.remove();
-                saveTasksToLocalStorage(); // Save tasks after deletion
+                saveTasksToLocalStorage();
             }, 1000);
         } else {
             newCheckboxWrapper.classList.remove('completed');
         }
-        saveTasksToLocalStorage(); // Save tasks after checkbox change
+        saveTasksToLocalStorage();
     });
 }
 
@@ -65,36 +63,11 @@ function deleteCheckbox() {
     const focusedCheckbox = document.activeElement.closest('.checkbox-wrapper');
     if (focusedCheckbox) {
         focusedCheckbox.remove();
-        saveTasksToLocalStorage(); // Save tasks after deletion
+        saveTasksToLocalStorage();
     }
 }
 
 function addTask(task = '', location = '', checked = false) {
-    const formData = new FormData();
-    formData.append('task', task);
-    formData.append('location', location);
-
-    fetch('/plan', {
-        method: 'POST',
-        body: formData
-    })
-    .then(response => {
-        if (response.ok) {
-            return response.text();
-        }
-        throw new Error('Network response was not ok.');
-    })
-    .then(data => {
-        // Handle success
-        // Optionally, you can redirect or do something else
-    })
-    .catch(error => {
-        console.error('Error:', error);
-    });
-
-    
-    // Rest of the function remains unchanged
-
     const taskContainer = document.getElementById('tasks-container');
     const taskEntry = document.createElement('div');
     taskEntry.classList.add('task-entry');
@@ -110,13 +83,11 @@ function addTask(task = '', location = '', checked = false) {
 
     taskContainer.appendChild(taskEntry);
 
-    // Add event listener for delete button
     taskEntry.querySelector('.delete-task-button').addEventListener('click', function() {
         taskEntry.remove();
-        saveTasksToLocalStorage(); // Save tasks after deletion
+        saveTasksToLocalStorage();
     });
 
-    // Add event listener for recommendations button
     taskEntry.querySelector('.recommendations-button').addEventListener('click', function() {
         const taskValue = taskEntry.querySelector('input[name="task"]').value;
         const locationValue = taskEntry.querySelector('input[name="location"]').value;
@@ -127,21 +98,20 @@ function addTask(task = '', location = '', checked = false) {
         }
     });
 
-    // Add event listener for task checkbox
     taskEntry.querySelector('.task-checkbox').addEventListener('change', function() {
         if (this.checked) {
             taskEntry.classList.add('completed');
             setTimeout(() => {
                 taskEntry.remove();
-                saveTasksToLocalStorage(); // Save tasks after deletion
+                saveTasksToLocalStorage();
             }, 1000);
         } else {
             taskEntry.classList.remove('completed');
         }
-        saveTasksToLocalStorage(); // Save tasks after checkbox change
+        saveTasksToLocalStorage();
     });
 
-    saveTasksToLocalStorage(); // Save tasks after adding a new one
+    saveTasksToLocalStorage();
 }
 
 function saveTasksToLocalStorage() {
@@ -168,3 +138,5 @@ window.onload = function() {
 window.onbeforeunload = function() {
     saveTasksToLocalStorage();
 };
+
+
