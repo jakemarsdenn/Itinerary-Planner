@@ -1,9 +1,11 @@
 import random
 from flask import Flask, render_template, request, redirect, url_for, jsonify, session
+from model import recommend_activity
 import requests
 
 app = Flask(__name__)
 app.secret_key = 'secret_key'
+# session = {}
 
 YELP_API_KEY = '-xzPL1litWa31uPPsXYBUtvqKZFgMwA2sUdnAZfp_Wd2gj8UsrXiGYdYbPzHFv8BYMYw0Dam6eJpuj3hntP36joOQNIxzu0xJcCvDDllGHkZ77rSj-lQpr-CqO1MZnYx'
 GOOGLE_MAPS_API_KEY = 'AIzaSyAZJwxQoA5o9KxSNlmzFkK7qrw3b-5pehk'
@@ -139,8 +141,16 @@ def survey_recommendation():
     group_size = request.form.get('group-preference')
     physicality_level = request.form.get('physicality-preference')
     recommended_activity = recommend_activity(weather, time_of_day, budget, environment, group_size, physicality_level)
-    print("recommended_activity: " + recommended_activity)
+    print("reco " + recommended_activity)
+    session['recommended_activity'] = recommended_activity
     return redirect("/")
+
+
+@app.route('/clear-recommended-activity', methods=['POST'])
+def clear_recommended_activity():
+    session.pop('recommended_activity', None)
+    return '', 204
+
 
 @app.route('/weather', methods=['POST'])
 def get_weather():

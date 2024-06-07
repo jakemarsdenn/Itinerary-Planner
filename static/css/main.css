@@ -288,6 +288,15 @@ p {
   width: 145px;
 }
 
+.recommendations-button:hover {
+  background-color: #2a9129;
+}
+
+.delete-task-button:hover {
+  background-color: #cf4242;
+}
+
+
 .directions-button,
 .recommendations-button {
   background-color: #4CAF50;
@@ -323,6 +332,11 @@ p {
   border-radius: 4px;
   border: none;
 }
+
+.button-2:hover {
+  background-color: #dedcdc;
+}
+
 
 .selected-place-container {
   display: flex;

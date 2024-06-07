@@ -3,15 +3,26 @@
 {% block title %}Maps{% endblock %}
 
 {% block content %}
-    <div class="full-container">
-        <div class="left-container">
-            <h1>Maps</h1>
-            <p>
-                Explore the interactive map below!
-            <p>
+    <style>
+        .full-container {
+            display: flex !important;
+            flex-direction: column !important;
+        }
+
+        .left-container {
+            position: relative !important;
+            margin-left: 250px !important;
+            margin-right: 250px !important;
+        }
+    </style>
+
+        <div class="full-container">
+            <div class="left-container">
+                <h1 style="margin-top:-40px;">Maps</h1>
+            </div>
             <script async src="//jsfiddle.net/jakemarsden/wu5y9vpm/5/embed/result/"></script>
         </div>
-    </div>
+
 {% endblock %}
 
 

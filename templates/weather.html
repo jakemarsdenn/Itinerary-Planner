@@ -7,21 +7,25 @@
     <style>
         .container {
             font-family: var(--smooth);
+            text-align: left;
+        }
+
+        .form-group {
+            display: inline-block;
+            margin: 10px 0;
         }
 
         input[type="text"] {
             padding: 10px;
-            margin: 10px 0;
             border: 1px solid #ccc;
             border-radius: 4px;
             font-family: var(--smooth);
             font-size: 1em;
-            width: calc(100% - 22px);
         }
 
         button {
             padding: 10px;
-            margin-top: 5px;
+            margin-left: 4px;
             border-radius: 4px;
             border: none;
             background-color: #007bff;
@@ -32,7 +36,7 @@
         }
 
         button:hover {
-            background-color: #0056b3;
+            background-color: #026ad9;
         }
 
         .weather-info {
@@ -53,8 +57,8 @@
     </style>
 
     <div class="container">
-        <h1 style="margin-top:180px;">Weather</h1>
-        <form id="locationForm">
+        <h1 style="margin-top:165px; text-align: center;">Weather</h1>
+        <form id="locationForm" class="form-group">
             <input type="text" id="zip" name="zip" placeholder="ZIP Code" required>
             <button type="submit">Get Weather</button>
         </form>
